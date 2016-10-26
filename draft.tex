@@ -57,12 +57,14 @@
 \providecommand{\conv}{\text{conv}}
 \providecommand{\vol}{\text{vol}}
 \providecommand{\spann}{\text{span}}
+\providecommand{\B}{\mathcal B}
 \providecommand{\C}{\mathcal C}
 \providecommand{\E}{\mathcal E}
 \providecommand{\W}{\mathcal W}
 \providecommand{\V}{\mathcal V}
 \providecommand{\X}{\mathcal X}
 \providecommand{\Y}{\mathcal Y}
+\providecommand{\Z}{\mathcal Z}
 \providecommand{\U}{\mathcal U}
 \providecommand{\R}{\mathcal R}
 \providecommand{\T}{\mathcal T}
@@ -116,17 +118,21 @@ In addition to pure analysis purposes, these sets are often used as terminal con
 %
 To be able to apply the methods presented in~\cite{Kolmanovsky:1998} and~\cite{blanchini:2007} the modelled uncertainty has to be constrained to known convex set, in particular a polytope or a ellipsoid.
 %
-If constraints on the system do not have to be satisfied for all possible uncertainties but merely for a subset satisfying some probabilistic condition, sampling based methods can be applied, see e.g.~\cite{Margellos2014,Zhang2015}.
+If constraints on the system do not have to be satisfied for all possible uncertainties but merely for a subset then the problem becomes a chance constrained problem, see e.g.~\cite{Kall2010}.
+%
+Control formulations of this kind can be addressed using a range of techniques including scenario optimization, see e.g.~\cite{Calafiore2010}, and sampling based methods, e.g.~\cite{Margellos2014,Zhang2015}.
 %
 However, the sets determined based on sampled uncertainties are computationally expensive to obtain and guaranties can only be given in a stochastic sense, i.e. with a certain confidence level.
 %
-The method presented in~\cite{Zhang2015} is based on determining a certain set in which the probabilistic requirements are met and using that set for subsequent analysis.
+The method presented in~\cite{Zhang2015} is based on determining a certain set in which the probabilistic requirements are met with a given confidence and using that set for subsequent analysis.
 %
 This concept does not require sampling for simple probability distributions, instead we can explicitly parametrise an auxiliary set in which all probabilistic conditions are met.
 %
 Using such a parametrised set, we can optimise the size of the positive invariant set for the particular set in order to produce the largest positive invariant set while guaranteeing satisfaction of the probabilistic constraints, hence approximating the positive invariant set of the original problem.
 %
 Unlike sample based approaches this method inherently guarantees probabilistic constraint satisfaction.
+
+A similar principle of using sets of a set probability measure is used in p-efficiency theory, see~\cite{Dentcheva2009}, where the distribution is not required to be simple but the structure of the chance constraints is restrictive.
 
 In order to use a stochastically constrained system in a robust model predictive control setup while introducing a minimal amount of conservatism a closed-loop min-max formulation has to be applied~\cite{Lee:1997}, this requires the determination of additional constraints.
 %
@@ -147,6 +153,8 @@ Two numerical examples are presented in section~\ref{sec:examples} to illustrate
 The following notation is used in the sequel: $A\oplus B = \{x:x=a+b,a\in A,b\in B\}$ denotes the Minkowski addition, $A\ominus B = \{x: x+b \in A\forall b\in B\}$ the Pontryagin difference, for a real set $C\subset\RR^d$ we denote the image of $C$ under the linear map $A:\RR^d\rightarrow\RR^d$ by $AC = \{y\in\RR^d:Ax=y,x\in C\}$ and the pre-image $A^{-1}C = \{y\in\RR^d:Ay\in C\}$.
 %
 We denote the probability of an event $E$ by $\PP\{E\}$, throughout this paper we assume the probability density to be uniform.
+%
+The set $\B_P(r) = \{x\in\RR^d:x^TPx\leq r^2\}$ denotes the $P$-ball centred at the origin, for a matrix $\Gamma\in\RR^{m\times n}$ the notation $\Gamma x\leq \bfa{1}$ is to be understood element-wise, where $\bfa{1}$ is a vector of ones in $\RR^m$.
 
 
 \section{Setup}\label{sec:setup}
@@ -172,16 +180,33 @@ which is subject to a random variable $v\in\V = \{v\in\RR^{q_\Y}:\Gamma_i v\leq 
 The output is probabilistically constrained to satisfy
 %
 \begin{equation}\label{eq:probabilistic:constraint}
-	\PP\{y\in\Y\}\geq p.
+	\PP\{ v \in \mathcal{V} : y = Cx + Du + v \in \mathcal{Y} \}\geq p.
 \end{equation}
 %
 with $\Y=\{y\in\RR^{q_\Y}:H_i y\leq h_i, i\leq M_\Y\}$.
 
+We not use the following proposition.
+%
+\begin{prop}
+Let $v\in\V$ be a uniformly distributed random variable, let $\V^\prime\subseteq\V$ such that $\vol(\V^\prime)\geq p$, then every $q\in\Z\ominus\V^\prime$ satisfies $\PP\{q+v\in\Z\}\geq p$.
+\end{prop}
+%
+\begin{pf}
+%
+Using that $\PP\{\{q\}\oplus\V^\prime\subseteq\Z\} = \PP\{\V^\prime\} = \vol(\V^\prime)$ for all $q\in\Z\ominus\V^\prime$ we have
+%
+\begin{equation}\begin{split}
+&\PP\{q+v\in\Z\} = \PP\{\{q\}\oplus\V\subseteq\Z\} = \\
+&\PP\{\{q\}\oplus(\V^\prime\cup(\V\setminus\V^\prime))\subseteq\Z\} = \\
+&\PP\{\{q\}\oplus\V^\prime\subseteq\Z\} + \PP\{\{q\}\oplus(\V\setminus\V^\prime)\subseteq\Z\}\geq \\
+&\PP\{\{q\}\oplus\V^\prime\subseteq\Z\} =\vol(\V^\prime)\geq p.
+\end{split}\end{equation}
+%
+\end{pf}
+%
+Notice that for polytopic $\Z$ and $\V^\prime$ the set $\Z\ominus\V^\prime$ can be computed explicitly and is itself polytopic.
 
-Notice that for any $\V^\prime\subseteq\V$ with $\frac{\vol(\V^\prime)}{\vol(\V)}\geq p$ we have $\PP\{Cx+Du + v\in\Y\forall v\in\V^\prime\}\geq p$, where $Cx+Du+v\in\Y$ for all $v\in\V^\prime$ can easily be enforced by constraining $x$ and $u$.
-%
-Furthermore, by choosing $\V^\prime$ to be polytopic the equivalent constraints on $x$ and $u$ are polytopic and can easily be determined.
-%
+
 In the sequel of this paper we discuss how~$\V^\prime$ can be chosen in order to obtain the largest guaranteed n-step controllable set for a given target set, guaranteed positive invariant set.
 
 
@@ -246,11 +271,26 @@ In order to computationally determine $X^\infty$ we define the recursive sequenc
 Notice that $X_k = \bigcap_{l\leq k}\E_l$ and therefore the recursion terminates, analogue to the conventional MRPI calculation, once $X_k\subseteq X_{k+1}$.
 
 \begin{thm}
-Iteration~\eqref{eq:MRPI:sequence} terminates after a finite number of iterations~$N$, such that $X_{N+1}=X_N$ and $X_N=X^\infty$.
+Let $\Gamma$ be a map such that $\Gamma x\leq\bfa{1}$ and $-\Gamma x\leq\bfa{1}$ for all $x\in\X$ and let $((A+BK),\Gamma)$ be observable, then iteration~\eqref{eq:MRPI:sequence} terminates after a finite number of iterations~$N$, such that $X_{N+1}=X_N$ and $X_N=X^\infty$.
 \end{thm}
 %
 \begin{pf}
-Do we need one?!
+%
+The observability of $((A+BK),\Gamma)$ implies that $X_d$ is compact, since $X_{d-1}\subseteq\bigcap_{k\leq d-1}(A+BK)^{-k}\X\subseteq\{x:\pm\Gamma x\leq\bfa{1}\wedge\dots\wedge\pm\Gamma(A+BK)^{d-1} x\leq\bfa{1}\} = \{x:\pm\Gamma Ox\leq \bfa{1}\}$ for the observability matrix~$O$ which has full rank.
+
+Let~$P$ be such that $(A+BK)^TP(A+BK)\leq\rho^2P$ holds for $\rho$ denoting the spectral radius of $A+BK$.
+%
+To see that $\E_k$ grows exponentially let $\W\subseteq\B_P(r)$ then
+%
+\begin{equation}\begin{split}
+	&\bigoplus_{i=0}^{k-1}(A+BK)^i\W \subseteq \bigoplus_{i=0}^{k-1}(A+BK)^i\B_P(r)\\
+	&\subseteq\bigoplus_{i=0}^{k-1}\B_P(\rho^i r) = \B_P(\sum_{i=0}^{k-1}\rho^i r)\subseteq\B_P(\frac{r}{1-\rho})
+\end{split}\end{equation}
+%
+i.e. $\E_k$ consists of an expanding minuend and a bounded subtrahend.
+%
+Therefore $\E_k$ expands exponentially, since $X_{d-1}$ is bounded there exists an integer~$N$ such that $X_{N}\cap\E_{N+1}=X_N$ hence $X_N=X^\infty$.
+%
 \end{pf}
 
 The optimisation program to approximate the positive invariant set $\X^\infty$ can therefore be formulated as
@@ -335,6 +375,15 @@ The optimisation approximating the n-step controllable set $\C_n(\T)$ is then gi
 \end{equation}
 \end{subequations}
 
+\begin{rem}
+The goal of reformulating a chance constrained model predictive control setup using the proposed method would be to minimise the introduced conservatism.
+%
+To achieve the best possible performance while guaranteeing constraint satisfaction a closed loop min-max model predictive control problem would be formulated, see e.g.~\cite{Lee:1997}.
+%
+This means that at each stage the decision variables are constrained to be such that the successor state is guaranteed to lie on a feasible trajectory to the target set.
+%
+So that if a chance constrained model predictive control problem is reformulated as a deterministically constrained problem guaranteeing probabilistic feasibility, the sets $C_n(\T)$ would play the role of stage constraints with the target set $\T=X^\infty$ to guarantee recursive feasibility.
+\end{rem}
 
 
 \section{The Volume of a Transformed Hypercube}\label{sec:volume:of:hypercube}
@@ -367,6 +416,7 @@ All geometric calculations necessary to compute~\eqref{seq:optimisation:MRPI:abs
 \end{equation}
 %
 where $\lambda_i$ are the vertices of the unit box $U = \{\lambda\in\RR^d:0\leq\lambda_i\leq 1\}$.
+
 
 The problem formulation~\eqref{seq:optimisation:MRPI:abstract} can therefore be reformulated as
 %
