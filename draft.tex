@@ -503,11 +503,23 @@ As span vectors we use $v_1 = (0.07,0.08)^T$ and $v_2 = (-0.07,0.08)^T$, which m
 %
 Although we can not make statements on convexity of the volume in this parametrisation the optimisation converges to the same maximiser for different initialisers, furthermore numeric evaluation of the Hessian at the maximiser reveals that one eigenvalue vanishes. 
 %
-The resulting set is illustrated in Figure~\ref{fig:MRPI:optimised}.
+
+In order to compare the proposed method with existing results we compute a sample based set as described in~\cite{Zhang2015}, that is we compute the smallest set containing enough samples guarantee constraint satisfaction with a confidence of $1-\beta$.
+%
+To obtain a comparable result we use again use a scaled version of $\V$, so that the optimisation is given as
+%
+\begin{equation}\label{eq:comparison:set}\begin{split}
+	\min_{\gamma_1,\dots,\gamma_4}&\quad\sum_{i=1}^4\gamma_i\\
+	\text{s.t.}&\quad \Gamma_i \bfa{v}^{(j)}\leq \gamma_i ,i\in\{1,\dots,4\}
+\end{split}\end{equation}
+%
+Where $\bfa{v}^{(j)}$ are the samples used to satisfy the probabilistic requirements with the given confidence of $\beta=1e-3$, the number of samples necessary to satisfy this requirement is given by cumulative binomial distribution but can be overestimated to be $N \geq \frac{2}{\beta}(2-\log(p))$, so for our choice $N = 4714$.
+%
+The resulting sets are illustrated in Figure~\ref{fig:MRPI:optimised}.
 %
 \begin{figure}
 \includegraphics[width=.95\linewidth]{MRPIsetOptimised.pdf}
-\caption{The guaranteed positive invariant set of the system~\eqref{eq:example:system:MRPI} in red, blue the original invariant set initialised using $t_1=t_2=\sqrt{0.3005}$ and $v_0 = (0,-0.01)^T$.}
+\caption{The guaranteed positive invariant set of the system~\eqref{eq:example:system:MRPI} in red, blue the robust positive invariant set for the disturbance set computed with the methods discussed in~\cite{Zhang2015}.}
 \label{fig:MRPI:optimised}
 \end{figure}
 
@@ -516,13 +528,11 @@ For the same setup~\eqref{eq:example:system:MRPI} we approximate the guaranteed 
 %
 Again the result illustrated in figure~\ref{fig:n:step:controllable:set} can be reproduced using different initial values although the Hessian at the maximiser has a non-trivial nullspace.
 %
-
 \begin{figure}
 \includegraphics[width=.95\linewidth]{NStepSetOptimised.pdf}
-\caption{Approximation of the guaranteed 3-step controllable set for a box $\T$ (in blue). The additional sets are remaining $C_1(\T),C_2(\T)$ and $C_3(\T)$ for the initialiser and the optimised~$\V^\prime$.}
+\caption{Approximation of the guaranteed 3-step controllable set for a box $\T$ (in blue). The additional sets are remaining $C_1(\T),C_2(\T)$ and $C_3(\T)$ for the comparison set obtained with~\eqref{eq:comparison:set} and the optimised~$\V^\prime$ obtained with the proposed method.}
 \label{fig:n:step:controllable:set}
 \end{figure}
-
 
 
 
