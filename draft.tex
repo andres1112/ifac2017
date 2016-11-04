@@ -84,15 +84,15 @@
 
 \begin{frontmatter}
 
-\title{Maximising the Guaranteed Feasible Set for Uncertain MPC Schemes with Probabilistic Constraints}%\thanksref{footnoteinfo}} 
+\title{Maximising the guaranteed feasible set for uncertain MPC schemes with probabilistic constraints}%\thanksref{footnoteinfo}} 
 % Title, preferably not more than 10 words.
 
 
 \author{Rainer M. Schaich} 
-\author{Mark Cannon}
+\qquad\qquad\author{Mark Cannon}
 
 
-\address{Department of Engineering Science, University of Oxford, OX1 3PJ, UK. (e-mail: \{rainer.schaich,mark.cannon\}@eng.ox.ac.uk).}
+\address{\mbox{Department of Engineering Science, University of Oxford, OX1 3PJ, UK} e-mail: \{rainer.schaich,mark.cannon\}@eng.ox.ac.uk}
 
 
           
@@ -104,7 +104,7 @@ Keyword 1; keyword 2;
 
 
 \begin{abstract}                          % Abstract of not more than 250 words.
-This paper proposes a method of approximating positively invariant sets and $n$-step controllable sets of uncertain linear systems that are subject to chance constraints. The computed sets are robustly invariant and are guaranteed to satisfy the probabilistic constraints; in contrast existing methods based on random sampling are only able to satisfy such constraints with a certain level of confidence. The proposed approach uses explicitly parametrised auxiliary disturbance sets, which are optimised so as to maximise the relevant positively invariant or $n$-step controllable set. The paper's results are illustrated by numerical examples.
+This paper proposes a method of approximating positively invariant sets and $n$-step controllable sets of uncertain linear systems that are subject to chance constraints. The computed sets are robustly invariant and are guaranteed to satisfy the probabilistic constraints; in contrast existing methods based on random sampling are only able to satisfy such constraints with a certain level of confidence. The proposed approach uses explicitly parametrised auxiliary disturbance sets, which are optimised so as to maximise the relevant positively invariant or $n$-step controllable set. The results are illustrated by numerical examples.
 \end{abstract}
 
 \end{frontmatter}
@@ -432,7 +432,11 @@ As in the case of the positive invariant set, fixing $\V^\prime$ to be polytopic
 %
 It is known that $C_n(\T) = C^n_1(\T) = C_1(C_1(\dots C_1(\T)\dots))$ (see e.g.~\cite{blanchini:2007}), which allows the use of simple computational geometry algorithms.
 
-In particular the one-step controllable set $C_1(\T)$ for $\T = \{x\in\RR^d:J_i x\leq1,i\leq M_\T\}$ is given by the projection of 
+In particular the one-step controllable set $C_1(\T)$ for 
+\[
+\T = \Bigl\{x\in\RR^d : J_i x\leq1,\ i\leq M_\T\Bigr\}
+\]
+is given by the projection of 
 %
 \begin{multline*}
 L_1(\T) = \Bigl\{(x,u)\in (\X,\U): \\
@@ -486,7 +490,14 @@ So that if a chance constrained model predictive control problem is reformulated
 %
 In this section we present a method allowing us to optimise over polytopes as required to solve~\eqref{seq:optimisation:MRPI:abstract} and~\eqref{seq:optimisation:n:step:set:abstract}.
 %
-For this we consider the class of parallelotopes (see e.g.~\cite{Coxeter:1973}), i.e. the minimal zonotope in $\RR^d$, $\spann(v_1,\dots,v_d) = \{x:\exists 0\leq t_i\leq1, x = \sum_{i=1}^d t_iv_i\}$.
+For this we consider the class of parallelotopes \citep[see
+e.g.][]{Coxeter:1973}), i.e.~the minimal zonotope in $\RR^d$: 
+\begin{multline*}
+  \spann(v_1,\dots,v_d) = \Bigl\{x:\exists t_i, \ 
+i = 1,\ldots, d, \\
+0 \leq t_i\leq1, \ 
+ x = \sum_{i=1}^dt_iv_i\Bigr\}.
+\end{multline*}
 %
 It is well known that the volume of a parallelotope is given by
 %
@@ -593,7 +604,12 @@ First we illustrate the approximation of the guaranteed positive invariant set~$
 	x^+ = \begin{pmatrix}0.7&-0.25\\0.25&0.7\end{pmatrix}x+\begin{pmatrix}0\\1\end{pmatrix}u+w
 \end{equation}
 %
-subject to the constraints $\X = \{x:\norm{x}_\infty\leq15\}$, $\U = \{u:\abs{u}\leq2\}$ and $\W=\{w:\norm{w}_1\leq1\}$.
+subject to the constraints 
+\begin{align*}
+\X &= \{x:\norm{x}_\infty\leq15\}, \\
+\U &= \{u:\abs{u}\leq2\}, \\
+\W &= \{w:\norm{w}_1\leq1\}.
+\end{align*}
 %
 The output 
 %
@@ -612,12 +628,17 @@ is subject to the probabilistic constraint
 for 
 %
 $$
-\V = \conv\{\begin{pmatrix}\pm0.08\\0\end{pmatrix},\begin{pmatrix}0\\\pm0.07\end{pmatrix}\}.
+\V = \conv\biggl\{\begin{pmatrix}\pm0.08\\0\end{pmatrix},\begin{pmatrix}0\\\pm0.07\end{pmatrix}\biggr\}.
 $$
 %
 To compute a feedback controller $u=Kx$ we use a LQR design with $Q=I$ and $R=1$.
 %
-As span vectors we use $v_1 = (0.07,0.08)^T$ and $v_2 = (-0.07,0.08)^T$, which means that $\V^\prime$ is a scaled version of $\V$.
+As span vectors we use 
+\[
+v_1 = \begin{pmatrix} 0.07 \\ 0.08\end{pmatrix} \quad \text{and}\quad 
+v_2 = \begin{pmatrix}-0.07 \\ 0.08\end{pmatrix},
+\] 
+which means that $\V^\prime$ is a scaled version of $\V$.
 %
 Although we can not make statements on convexity of the volume in this parametrisation the optimisation converges to the same maximiser for different initialisers, furthermore numeric evaluation of the Hessian at the maximiser reveals that one eigenvalue vanishes. 
 %
@@ -627,7 +648,7 @@ In order to compare the proposed method with existing results we compute a sampl
 To obtain a comparable result we use again use a scaled version of $\V$, so that the optimisation is given as
 %
 \begin{subequations}\label{eq:comparison:set}
-\begin{equation}\min_{\gamma_1,\dots,\gamma_4} \sum_{i=1}^4\gamma_i
+\begin{equation}\min_{\gamma_1,\dots,\gamma_4} \  \ \sum_{i=1}^4\gamma_i
 \end{equation}
 subject to 
 \begin{equation}
@@ -643,22 +664,24 @@ Where $\bfa{v}^{(j)}$ are the samples used to satisfy the probabilistic requirem
 %
 The resulting sets are illustrated in Figure~\ref{fig:MRPI:optimised}.
 %
+
 \begin{figure}
 \includegraphics[width=.95\linewidth]{MRPIsetOptimised.pdf}
 \caption{The guaranteed positive invariant set of the system~\eqref{eq:example:system:MRPI} in red, blue the robust positive invariant set for the disturbance set computed with the methods discussed in~\cite{Zhang2015}.}
 \label{fig:MRPI:optimised}
-\end{figure}
+\vspace{4mm}\end{figure}
 
 
 For the same setup~\eqref{eq:example:system:MRPI} we approximate the guaranteed 3-step controllable set $\C_3(\T)$, where $\T=\{x:\norm{x}_\infty\leq 2\}$.
 %
 Again the result illustrated in figure~\ref{fig:n:step:controllable:set} can be reproduced using different initial values although the Hessian at the maximiser has a non-trivial nullspace.
 %
+
 \begin{figure}
 \includegraphics[width=.95\linewidth]{NStepSetOptimised.pdf}
 \caption{Approximation of the guaranteed 3-step controllable set for a box $\T$ (in blue). The additional sets are remaining $C_1(\T),C_2(\T)$ and $C_3(\T)$ for the comparison set obtained with~\eqref{eq:comparison:set} and the optimised~$\V^\prime$ obtained with the proposed method.}
 \label{fig:n:step:controllable:set}
-\end{figure}
+\vspace{4mm}\end{figure}
 
 
 
