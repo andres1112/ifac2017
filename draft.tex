@@ -63,6 +63,7 @@
 \providecommand{\B}{\mathcal B}
 \providecommand{\C}{\mathcal C}
 \providecommand{\E}{\mathcal E}
+\providecommand{\F}{\mathscr F}
 \providecommand{\W}{\mathcal W}
 \providecommand{\V}{\mathcal V}
 \providecommand{\X}{\mathcal X}
@@ -78,7 +79,7 @@
 
 \newcommand*{\Resize}[1]{\resizebox{\columnwidth}{!}{$#1$}}
 
-%\allowdisplaybreaks[1]
+\allowdisplaybreaks[4]
 
 \begin{document}
 
@@ -104,7 +105,7 @@ Keyword 1; keyword 2;
 
 
 \begin{abstract}                          % Abstract of not more than 250 words.
-This paper proposes a method of approximating positively invariant sets and $n$-step controllable sets of uncertain linear systems that are subject to chance constraints. The computed sets are robustly invariant and are guaranteed to satisfy the probabilistic constraints; in contrast existing methods based on random sampling are only able to satisfy such constraints with a certain level of confidence. The proposed approach uses explicitly parametrised auxiliary disturbance sets, which are optimised so as to maximise the relevant positively invariant or $n$-step controllable set. The results are illustrated by numerical examples.
+This paper proposes a method of approximating positively invariant sets and $n$-step controllable sets of uncertain linear systems that are subject to chance constraints. The computed sets are robustly invariant and are guaranteed to satisfy the probabilistic constraints. In contrast, existing methods based on random sampling are only able to satisfy such constraints with a certain level of confidence. The proposed approach uses explicitly parametrised auxiliary disturbance sets, which are optimised so as to maximise the relevant positively invariant or $n$-step controllable set. The results are illustrated by numerical examples.
 \end{abstract}
 
 \end{frontmatter}
@@ -161,11 +162,12 @@ The parametrisation of a parallelotope is discussed in~\ref{sec:volume:of:hyperc
 %
 Two numerical examples are presented in section~\ref{sec:examples} to illustrate the proposed scheme in two dimensions and in section~\ref{sec:conclusion} we conclude the presentation and sketch possible extensions to the presented scheme.
 
-The following notation is employed: $A\oplus B = \{x:x=a+b,\, a\in A,\, b\in B\}$ denotes the Minkowski addition, $A\ominus B = \{x: x+b \in A \, \forall b\in B\}$ the Pontryagin difference, for a real set $C\subset\RR^d$ we denote the image of $C$ under the linear map $A:\RR^d\rightarrow\RR^d$ by $AC = \{y\in\RR^d:Ax=y,x\in C\}$ and the pre-image $A^{-1}C = \{y\in\RR^d:Ay\in C\}$.
+\textit{Notation.} Given sets $A,B\subset\RR^d$, $A\oplus B = \{x:x=a+b,\, a\in A,\, b\in B\}$ denotes the Minkowski sum and $A\ominus B = \{x: x+b \in A \ \forall b\in B\}$ the Pontryagin difference. We denote the image and pre-image of $C\subset\RR^d$ under the linear map $A:\RR^d\rightarrow\RR^d$ respectively as $AC = \{y\in\RR^d:Ax=y,\, x\in C\}$ and $A^{-1}C = \{y\in\RR^d:Ay\in C\}$. The $d$-dimensional volume of $C\subset\RR^d$ is denoted by $\vol(C)$. 
 %
-We denote the probability of an event $E$ by $\PP\{E\}$, throughout this paper we assume the probability density to be uniform.
+We define $v$ as a random parameter on a probability space $(\V,\F,\PP)$ and denote the probability of an event $E(v)$ as $\PP\{v\in\V : E(v)\}$.
+%; throughout this paper the probability density of $v$ is assumed to be uniform.
 %
-The set $\B_P(r) = \{x\in\RR^d:x^TPx\leq r^2\}$ denotes the $P$-ball of radius $r$ centred at the origin, for a matrix $\Gamma\in\RR^{m\times n}$ the notation $\Gamma x\leq \bfa{1}$ is to be understood element-wise, where $\bfa{1}$ is a vector of ones in $\RR^m$.
+The set $\B_P(r) = \{x\in\RR^d:x^TPx\leq r^2\}$ denotes the $P$-ball of radius $r$ centred at the origin. For a matrix $\Gamma\in\RR^{m\times n}$ the notation $\Gamma x\leq \bfa{1}$ is to be understood element-wise, where $\bfa{1}$ is a vector of ones in $\RR^m$.
 
 
 \section{Problem formulation}\label{sec:setup}
@@ -174,39 +176,42 @@ The set $\B_P(r) = \{x\in\RR^d:x^TPx\leq r^2\}$ denotes the $P$-ball of radius $
 
 The discrete time system we consider is given by
 %
-\begin{equation}
-	x^+ = Ax + Bu + w
+\begin{equation}\label{eq:system}
+	x^+ = Ax + Bu + w ,
 \end{equation}
 %
-with state $x$ and control input $u$ subject to the constraints 
-\begin{align*}
-&x \in\X = \bigl\{x\in\RR^d : E_ix\leq 1, \ i\leq M_\X\bigr\}, \\
-&u\in\U = \bigl\{u\in\RR^{q_\U} : F_i u\leq 1, \ i\leq M_\U\bigr\},
-\end{align*} 
-and with disturbance input $w$ subject to the constraints
-\[
-w\in\W = \bigl\{w\in\RR^{q_\W}:G_i w\leq 1,\ i\leq M_\W \bigr\}.
-\]
+where the state $x$ and control input $u$ are subject to constraints defined in terms of compact, convex polytopic sets $\X$, $\U$:
+\begin{equation}\label{eq:state_input:constraints}
+\begin{aligned}
+&x \in\X = \bigl\{x\in\RR^d : E_ix\leq 1, \, i\leq M_\X\bigr\}, \\
+&u\in\U = \bigl\{u\in\RR^{q_\U} : F_i u\leq 1, \, i\leq M_\U\bigr\},
+\end{aligned}
+\end{equation} 
+and the disturbance input $w$ is subject to the constraint
+\begin{equation}\label{eq:disturbance}
+w\in\W = \bigl\{w\in\RR^{q_\W}:G_i w\leq 1,\, i\leq M_\W \bigr\}.
+\end{equation}
 %
-We furthermore consider the auxiliary output variable 
+We furthermore consider the output variable $y$,
 %
-\begin{equation}
+\[%\begin{equation}\label{eq:output}
 	y = Cx + Du + v
-\end{equation}
+\]%\end{equation}
 %
-which depends on a random variable $v$:
+which depends on the random variable $v$,
 \[
-v\in\V = \bigl\{v\in\RR^{q_\Y}:\Gamma_i v\leq 1, \ i\in M_\V\bigr\},
+v\in\V = \bigl\{v\in\RR^{q_\Y}:\Gamma_i v\leq 1, \ i\in M_\V\bigr\}. 
 \]
-for which the probability distribution is assumed to be uniform.
+Throughout this paper $v$ is assumed to be uniformly distributed on $\V$.
+%Throughout this paper the probability density function of $v$ is assumed to be uniform.
 %
-The output is probabilistically constrained to satisfy
+The output variable $y$ is subject to the chance (or probabilistic) constraint
 %
 \begin{equation}\label{eq:probabilistic:constraint}
-	\PP\bigl\{ v \in \mathcal{V} : y = Cx + Du + v \in \mathcal{Y} \bigr\}\geq p.
+	\PP\bigl\{ v \in \mathcal{V} : y = Cx + Du + v \in \mathcal{Y} \bigr\}\geq p
 \end{equation}
 %
-with
+for given $p\in(0,1]$, with
 \[
 \Y=\bigl\{y\in\RR^{q_\Y} : H_i y\leq h_i, \ i\leq M_\Y\bigr\}.
 \]
@@ -214,46 +219,56 @@ with
 We make  use of the following proposition.
 %
 
-\vspace{0.5\baselineskip}\begin{prop}
-Let $v\in\V$ be a uniformly distributed random variable, let $\V^\prime\subseteq\V$ such that $\vol(\V^\prime)\geq p$, then every $q\in\Z\ominus\V^\prime$ satisfies $\PP\{q+v\in\Z\}\geq p$.
+\vspace{0.5\baselineskip}
+\begin{prop}\label{prop1}
+Let $v\in\V$ be a uniformly distributed random variable and let $\V^\prime\subseteq\V$ be such that $\vol(\V^\prime)\geq p$, then every $q\in\Z\ominus\V^\prime$ satisfies $\PP\{v\in\V : q+v\in\Z\}\geq p$.
 \end{prop}
 %
+
 \bpf
 %
-Using the fact that $\PP\{\{q\}\oplus\V^\prime\subseteq\Z\} = \PP\{\V^\prime\} = \vol(\V^\prime)$ for all $q\in\Z\ominus\V^\prime$ we have
-%
-\begin{equation}\begin{split}
-&\PP\{q+v\in\Z\} = \PP\{\{q\}\oplus\V\subseteq\Z\} 
- \\
-&=\PP\{\{q\}\oplus(\V^\prime\cup(\V\setminus\V^\prime))\subseteq\Z\} \\
-&=\PP\{\{q\}\oplus\V^\prime\subseteq\Z\} + \PP\{\{q\}\oplus(\V\setminus\V^\prime)\subseteq\Z\} \\
-&\geq\PP\{\{q\}\oplus\V^\prime\subseteq\Z\}\\ &=\vol(\V^\prime)\geq p.
-\end{split}\end{equation}
-\mbox{}\vspace{-0.5\baselineskip}
+For any given $q\in\Z\ominus\V^\prime$, the definition of the Pontryagin difference implies that
+\[
+q+v\in\Z \quad \text{whenever} \quad  v\in\V^\prime.
+\]
+Therefore, for every $q\in\Z\ominus\V^\prime$, the probability of the event that $q+v$ lies in $\Z$ can be no less than the probability of the event that $v$ lies in $\V^\prime$. It follows that 
+\[
+\PP\{ v\in\V : q + v\in \Z\} \geq \PP\{\V^\prime\} = \vol(\V^\prime)
+\]
+and hence $\PP\{ v\in\V : q + v\in \Z\} \geq p$ if $\V^\prime$ is such that $\vol(\V^\prime) \geq p$.
+% Using the fact that $\PP\{\{q\}\oplus\V^\prime\subseteq\Z\} = \PP\{\V^\prime\} = \vol(\V^\prime)$ for all $q\in\Z\ominus\V^\prime$ we have
+% %
+% \begin{align*}
+% &\PP\{v\in\V : q+v\in\Z\} 
+% =\PP\{v\in \V^\prime\cup(\V\setminus\V^\prime) : q + v \in \Z, \ ()\subseteq\Z\} \\
+% &=\PP\{\{q\}\oplus\V^\prime\subseteq\Z\} + \PP\{\{q\}\oplus(\V\setminus\V^\prime)\subseteq\Z\} \\
+% &\geq\PP\{\{q\}\oplus\V^\prime\subseteq\Z\}\\ &=\vol(\V^\prime)\geq p. 
+% \end{align*}
+%\mbox{}\vspace{-0.5\baselineskip}
 \epf
 %
 
-Notice that for polytopic $\Z$ and $\V^\prime$ the set $\Z\ominus\V^\prime$ can be computed explicitly and is itself polytopic.
+Note that for polytopic $\Z$ and $\V^\prime$ the set $\Z\ominus\V^\prime$ can be computed explicitly and is itself polytopic.
 
-
-In the sequel of this paper we discuss how~$\V^\prime$ can be chosen in order to obtain the largest guaranteed n-step controllable set for a given target set, guaranteed positive invariant set.
+In the remainder of this paper we discuss how~$\V^\prime$ can be chosen in order to obtain the largest guaranteed $n$-step controllable set for a given target set and the largest guaranteed positively invariant set for the system (\ref{eq:system}) subject to the robust constraints~(\ref{eq:state_input:constraints}) and the chance constraint (\ref{eq:probabilistic:constraint}).
 
 
 \subsection{Approximating the guaranteed invariant set}\label{ssec:approximating:MRPI}
 %
-First we discuss how we can extend existing methods to calculate the maximal robust positive invariant (MRPI) set (see e.g.~\cite{blanchini:2007}) in such a way that all states produce only feasible successor states for a given feedback controller $u = Kx$.
+First we discuss how to extend existing methods to calculate the maximal robust positively invariant (MRPI) set (see e.g.~\cite{blanchini:2007}) in such a way that all states in the MRPI set produce only feasible successor states for a given feedback controller $u = Kx$.
 %
-I.e. an invariant set for which all possible trajectories satisfy state constraints and probabilistic constraint at all time.
-%
-\begin{multline}\label{eq:alternative:MRPI:set}
-	X^\infty = \Bigl\{x\in\X: \\
-\begin{aligned} 
-&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i-1} w_{k-i} \\
+Thus we seek to determine a set of initial conditions for which all possible trajectories of (\ref{eq:system}) subject to (\ref{eq:disturbance}) satisfy the robust constraints~(\ref{eq:state_input:constraints}) and probabilistic constraint (\ref{eq:probabilistic:constraint}). Denoting the largest such set as $\X^\infty$ we have
+\begin{multline*}
+\X^\infty = \Bigl\{x\in\X: \\
+\begin{aligned}
+&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i} w_{k-i}\\
 &x_k\in\X\\
-&(C+DK)x_k+v\in\Y
+&Kx_k\in\U\\
+&\PP\{v\in\V : (C+DK)x_k+v\in\Y\}\geq p 
 \end{aligned}\\
-\forall w_j\in\W,\ \forall v\in \V^\prime,\ \forall k\geq 0 \Bigr\}
-\end{multline}
+\forall w_k\in\W,\, \forall k\geq 0 \Bigr\} .
+\end{multline*}
+%
 % \begin{multline}\label{eq:alternative:MRPI:set}
 % 	X^\infty = \Bigl\{x\in\X: \\
 % \begin{aligned}&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i-1} w_{k-i}\\
@@ -263,17 +278,19 @@ I.e. an invariant set for which all possible trajectories satisfy state constrai
 % \end{aligned} 
 % \end{multline}
 %
-It is obvious that $X^\infty$ contained in the invariant set of the original problem~$\X^\infty$:
+% It is obvious that $X^\infty$ contained in the invariant set of the original problem~$\X^\infty$:
+For a given set $\V^\prime$, let $X^\infty$ denote the set
 %
-\begin{multline*}
-\X^\infty = \Bigl\{x\in\X: \\
-\begin{aligned}
-&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i-1} w_{k-i}\\
-&x_k\in\X\\
-&\PP\{(C+DK)x_k+v\in\Y\}\geq p 
+\begin{multline}\label{eq:alternative:MRPI:set}
+	X^\infty = \Bigl\{x\in\X: \\
+\begin{aligned} 
+&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i} w_{k-i} \\
+&x_k\in\X \\ 
+&Kx_k\in\U \\
+&(C+DK)x_k+v_k\in\Y
 \end{aligned}\\
-\forall w_j\in\W,\, \forall k\geq 0 \Bigr\}
-\end{multline*}
+\forall w_k\in\W,\ \forall v_k\in \V^\prime,\ \forall k\geq 0 \Bigr\} .
+\end{multline}
 % \begin{equation}
 % 	\X^\infty = \left\{x\in\X: \begin{aligned}&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i-1} w_{k-i}\\
 % 	&x_k\in\X\\
@@ -281,17 +298,17 @@ It is obvious that $X^\infty$ contained in the invariant set of the original pro
 % 	&\forall w_j\in\W,k\geq 0\end{aligned} \right\}
 % \end{equation}
 %
-The inclusion $X^\infty\subseteq\X^\infty$ holds for any $\V^\prime\subseteq\V$ with the appropriate probability measure, therefore maximising the volume of $X^\infty$ improves the approximation of $\X^\infty$.
+Then from Proposition~\ref{prop1}, the inclusion $X^\infty\subseteq\X^\infty$ necessarily holds for any $\V^\prime\subseteq\V$ with probability measure $\PP\{\V^\prime\} \geq p$. Furthermore, by maximising the volume of $X^\infty$, we can improve the approximation of $\X^\infty$.
 
 
-In order to determine an algorithm to compute $X^\infty$ we rewrite the conditions met in~\eqref{eq:alternative:MRPI:set} we introduce the set of all possible successor states~$\D_k(X)$ of states in $X$ at time $k$:
+In order to determine an algorithm to compute $X^\infty$ we rewrite the conditions in~\eqref{eq:alternative:MRPI:set} by introducing the set of all possible successor states~$\D_k(X)$ of states in $X$ after $k$ time steps:
 %
 \begin{align*}
 	\D_k(X) &= (A+BK)^{k}X\oplus\W\oplus\dots\oplus(A+BK)^{k-1}\W\\
 	&= (A+BK)^k X\oplus \bigoplus_{i=0}^{k-1}(A+BK)^i\W
 \end{align*}
 %
-Using $\R = (C+DK)^{-1}(\Y\ominus\V^\prime)$ we can abbreviate condition~\eqref{eq:alternative:MRPI:set} to
+Defining $\R = (C+DK)^{-1}(\Y\ominus\V^\prime)$ we can abbreviate the conditions defining $X^\infty$ in~\eqref{eq:alternative:MRPI:set} to
 %
 \begin{equation}\label{eq:containment:condition:alternative:MRPI}
 \D_k(X^\infty)\subseteq\X\cap\R
@@ -299,44 +316,49 @@ Using $\R = (C+DK)^{-1}(\Y\ominus\V^\prime)$ we can abbreviate condition~\eqref{
 %
 for all $k\geq0$.
 %
-With this identity we can determine a direct way of determining $X^\infty$:
+Using these conditions we can express $X^\infty$ directly as
 %
-\begin{gather*}
+\begin{gather}
 X^\infty = %\bigcap_{k\geq0}(A+BK)^{-k}\Bigl((\X\cap\R)\ominus\bigoplus_{i=0}^{k-1}(A+BK)^i\W\Bigr) \\
 \bigcap_{k\geq0} \E_k, \\
-\E_k = (A+BK)^{-k}\Bigl((\X\cap\R)\ominus\bigoplus_{i=0}^{k-1}(A+BK)^i\W\Bigr) .
-\end{gather*}
+\E_k = (A+BK)^{-k}\biggl[(\X\cap\R)\ominus\bigoplus_{i=0}^{k-1}(A+BK)^i\W\biggr] . \label{eq:Ek:subtract}
+\end{gather}
 % \begin{equation}\label{eq:direct:formulation:MRPI:with:intersection}
 % 	X^\infty = \bigcap_{k\geq0}\underbrace{(A+BK)^{-k}\left((\X\cap\R)\ominus\bigoplus_{i=0}^{k-1}(A+BK)^i\W\right)}_{\E_k}.
 % \end{equation}
 %
-Due to its definition~$\E_k$ satisfies $\D_k(\E_k)\subseteq\X\cap\R$ for each $k\geq0$, furthermore using available methods it can be shown that $\E_k$ expands exponentially and therefore $X^\infty$ is finitely determined.
+Due to its definition~$\E_k$ satisfies $\D_k(\E_k)\subseteq\X\cap\R$ for each $k\geq0$, furthermore it can be shown that $\E_k$ expands exponentially and therefore $X^\infty$ is finitely determined  (see Theorem~\ref{thm2} below).
 %
-In order to computationally determine $X^\infty$ we define the recursive sequence
+In order to compute $X^\infty$ we define the sequence $X_0,X_1,\ldots$ via the iteration:
 %
 \begin{equation}\label{eq:MRPI:sequence}
-	\begin{split}
-	X_0 &= \X\\
-	Z_k &= X_k\cap\R\\
-	X_{k+1} &= Z_k\cap(A+BK)^{-1}(Z_k\ominus\W)
-	\end{split}
+\begin{aligned}
+  & X_0 = \X \\
+  & \begin{aligned}
+      & Z_k = X_k\cap\R\\
+      & X_{k+1} = Z_k\cap(A+BK)^{-1}(Z_k\ominus\W)
+    \end{aligned} 
+  \ \Biggr\} \ \ k = 1,2,\ldots
+\end{aligned}
 \end{equation}
 %
-Notice that $X_k = \bigcap_{l\leq k}\E_l$ and therefore the recursion terminates, analogue to the conventional MRPI calculation, once $X_k\subseteq X_{k+1}$.
+%with $X_0= \X$.
+Clearly $X_k = \bigcap_{l=0,\ldots,k}\E_l$ and, analogously to the conventional MRPI calculation~\citep{Kolmanovsky:1998}, the iteration therefore gives $X_k = X^\infty$ once $X_k\subseteq X_{k+1}$.
 
 \vspace{0.5\baselineskip}
-\begin{thm}
-Let $\Gamma$ be a map such that $\Gamma x\leq\bfa{1}$ and $-\Gamma x\leq\bfa{1}$ for all $x\in\X$ and let $\bigl((A+BK),\Gamma\bigr)$ be observable, then iteration~\eqref{eq:MRPI:sequence} terminates after a finite number of iterations~$N$, such that $X_{N+1}=X_N$ and $X_N=X^\infty$.
+\begin{thm}\label{thm2}
+Let $\Gamma$ be a matrix such that $\Gamma x\leq\bfa{1}$ and $-\Gamma x\leq\bfa{1}$ for all $x\in\X$ and let $\bigl((A+BK),\Gamma\bigr)$ be observable, then the iteration~\eqref{eq:MRPI:sequence} %terminates after a finite number, $N$, of iterations, such that 
+yields $X_{k+1}=X_k$ for all $k\geq N$ and hence $X_k=X^\infty$ for some finite integer $N$.
 \end{thm}
 %
 \bpf
 %
-The observability of $\bigl((A+BK),\Gamma\bigr)$ implies that $X_d$ is compact, since 
+The observability of the pair $\bigl((A+BK),\Gamma\bigr)$ implies that $X_{d-1}$ is compact, since 
 \begin{align*}
 X_{d-1} 
 &\subseteq\bigcap_{k\leq d-1}(A+BK)^{-k}\X\\
 &\subseteq \Bigl\{x:\pm\Gamma x\leq\bfa{1}\wedge\dots\wedge\pm\Gamma(A+BK)^{d-1} x\leq\bfa{1} \Bigr\}\\
-& = \{x:\pm\Gamma \Obs x\leq \bfa{1}\}
+& = \bigl\{x:\pm\Gamma \Obs x\leq \bfa{1}\bigr\}
 \end{align*}
 where $\Obs$ is the (full rank) observability matrix.
 
@@ -350,16 +372,21 @@ To see that $\E_k$ grows exponentially let $\W\subseteq\B_P(r)$ then
 %
 \begin{multline*}
   \bigoplus_{i=0}^{k-1}(A+BK)^i\W \subseteq \bigoplus_{i=0}^{k-1}(A+BK)^i\B_P(r)\\
-  \subseteq\bigoplus_{i=0}^{k-1}\B_P(\rho^i r) = \B_P(\sum_{i=0}^{k-1}\rho^i r)\subseteq\B_P(\frac{r}{1-\rho})
+  \subseteq\bigoplus_{i=0}^{k-1}\B_P(\rho^i r) = \B_P\biggl(\sum_{i=0}^{k-1}\rho^i r\biggr)\subseteq\B_P\Bigl(\frac{r}{1-\rho}\Bigr) .
 \end{multline*}
 %
-i.e. $\E_k$ consists of an expanding minuend and a bounded subtrahend.
+It follows that the subtrahend in square brackets on the RHS of (\ref{eq:Ek:subtract}) is bounded for all $k$ by $\B_P\bigl(r / (1-\rho)\bigr)$.
+%It follows that the RHS of (\ref{eq:Ek:subtract}) consists of an expanding minuend and a bounded subtrahend.
 %
-Therefore $\E_k$ expands exponentially, since $X_{d-1}$ is bounded there exists an integer~$N$ such that $X_{N}\cap\E_{N+1}=X_N$ hence $X_N=X^\infty$.
+Therefore 
+%$\E_k$ expands exponentially. Hence 
+the iteration (\ref{eq:MRPI:sequence}) must either yield $X_N = \emptyset$ for finite $N$
+(in which case $X^\infty=\emptyset$) or,
+since $X_{d-1}$ is bounded and $\E_k$ expands exponentially, there must exist a finite $N$ such that $X_{N}\cap\E_{N+1}=X_N$ and hence $X_N=X^\infty$.
 %
 \epf
 
-The optimisation program to approximate the positive invariant set $\X^\infty$ can therefore be formulated as
+An optimisation program to approximate the positively invariant set $\X^\infty$ can therefore be formulated as
 %
 \begin{subequations}\label{seq:optimisation:MRPI:abstract}
 	\begin{equation}
@@ -377,26 +404,28 @@ The optimisation program to approximate the positive invariant set $\X^\infty$ c
 \end{equation}
 \end{subequations}
 %
-In section~\ref{sec:volume:of:hypercube} we will discuss how an optimisation can be solved using parallelotopes for~$\V^\prime$.
+In section~\ref{sec:volume:of:hypercube} we discuss how this optimisation can be solved using parallelotopes for~$\V^\prime$.
 
 
-\subsection{Approximating the n-step controllable set}\label{ssec:approximating:n:step}
+\subsection{Approximating the $n$-step controllable set}\label{ssec:approximating:n:step}
 %
-We now turn our attention to the n-step controllable set~$\C_n(\T)$ for a given target set~$\T$.
+We now turn our attention to the $n$-step controllable set~$\C_n(\T)$ for a given target set~$\T$.
 %
-That is the set of all states such that a sequence of admissible inputs exists that takes any state $x\in\C_n$ to the target set $x_n\in\T$ for any admissible disturbance sequence $w\in\W$ while guaranteeing state- and probabilistic constraint satisfaction.
+That is the set of initial conditions $x_0\in\C_n$ such that a sequence of control inputs exists that drives the state in $n$ steps to the target set, $x_n\in\T$, for all admissible disturbance sequences 
+$w\in\W$, while guaranteeing that the robust state and input constraints~(\ref{eq:state_input:constraints}) and the probabilistic constraint~(\ref{eq:probabilistic:constraint}) are satisfied.
 %
 This set is given by
 %
 \begin{multline*}
-\C_n(\T) = \Bigl\{x\in\X: \\
+\C_n(\T) = \Bigl\{x_0\in\X: \exists \bigl\{u_0(\cdot),\ldots,u_{n-1}(\cdot)\bigr\}\\
 \begin{aligned}
-&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i-1} w_{k-i}\\
-&x_N\in\T\\
+&x_k = A^k x_0 + \sum_{i=1}^{k} A^{k-i}B u_{k-i}(x_{k-i}) + \sum_{i=1}^{k} A^{k-i} w_{k-i}\\
+&x_n\in\T\\
 &x_k\in\X\\
-&\PP\{(C+DK)x_k+v\in\Y\}\geq p
+&u_k(x_k)\in\U\\
+&\PP\bigl\{v\in\V : Cx_k + Du_k(x_k) +v \in\Y\bigr\}\geq p
 \end{aligned}\\
-\forall w_j\in\W,\, \forall k\geq 0 \Bigr\}	
+\forall w_k\in\W,\, \forall k\in\{ 0, \ldots , n\} \Bigr\}	
 \end{multline*}
 % \begin{equation}
 % 	\C_n(\T) = \left\{x\in\X:\begin{aligned}&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i-1} w_{k-i}\\
@@ -406,17 +435,18 @@ This set is given by
 % 	&\forall w_j\in\W,k\geq 0\end{aligned} \right\}	
 % \end{equation}
 %
-Again, it is trivial to see that the set
+Again, it is easy to verify that the set
 %
 \begin{multline*}
-C_n(\T) = \Bigl\{ x\in\X: \\
+C_n(\T) = \Bigl\{ x\in\X: \exists \bigl\{u_0(\cdot),\ldots,u_{n-1}(\cdot)\bigr\}\\
 \begin{aligned}
-&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i-1} w_{k-i}\\
+&x_k = A^k x_0 + \sum_{i=1}^{k} A^{k-i}B u_{k-i}(x_{k-i}) + \sum_{i=1}^{k} A^{k-i} w_{k-i}\\
 &x_N\in\T\\
 &x_k\in\X\\
-&(C+DK)x_k+v\in\Y
+&u_k(x_k)\in\U \\
+&Cx_k+Du_k(x_k) + v_k \in\Y
 \end{aligned}\\
-\forall w_j\in\W,\, \forall v\in \V^\prime,\, \forall k\in\{0,\dots,N\} \Bigr\}	
+\forall w_j\in\W,\, \forall v_k\in \V^\prime,\, \forall k\in\{0,\dots,n\} \Bigr\}	
 \end{multline*}
 % \begin{equation}
 % 	C_n(\T) = \left\{x\in\X:\begin{aligned}&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i-1} w_{k-i}\\
@@ -426,11 +456,15 @@ C_n(\T) = \Bigl\{ x\in\X: \\
 % 	&\forall w_j\in\W,v\in \V^\prime,k\in\{0,\dots,N\}\end{aligned} \right\}	
 % \end{equation}
 %
-is always contained in $\C_n$ for any admissible choice of $\V^\prime\subseteq\V$.
+is necessarily contained in $\C_n(\T)$ for any $\V^\prime\subseteq\V$ with measure $\PP\{\V^\prime\} \geq p$.
 %
-As in the case of the positive invariant set, fixing $\V^\prime$ to be polytopic leads to a computationally tractable algorithm yielding~$C_n$ to be a polytopic approximation of~$\C_n$, and optimising over~$\V^\prime$ to maximise the volume of~$C_n$ indirectly improves the approximation of $\C_n$.
+As in the case of the positively invariant set, fixing $\V^\prime$ to be a polytopic set leads to a computationally tractable optimisation for the maximisation of~$C_n$. This suggests an algorithm for constructing $C_n$ as a polytopic approximation of~$\C_n$ by optimising~$\V^\prime$ so as to maximise the volume of~$C_n$.
+% indirectly improves the approximation of $\C_n$.
 %
-It is known that $C_n(\T) = C^n_1(\T) = C_1(C_1(\dots C_1(\T)\dots))$ (see e.g.~\cite{blanchini:2007}), which allows the use of simple computational geometry algorithms.
+It is known that 
+%$C_n(\T) = C^n_1(\T) \doteq C_1(C_1(\cdots C_1(\T)\cdots))$ 
+$C_n(\T) = C^n_1(\T) \doteq C_1 \circ C_1 \circ \cdots \circ C_1(\T)$ 
+\citep[see e.g.][]{blanchini:2007}, which allows the use of simple computational geometry algorithms.
 
 In particular the one-step controllable set $C_1(\T)$ for 
 \[
@@ -458,7 +492,7 @@ onto $\RR^d$.
 %
 As all involved sets are polytopic, $L_1(\T)$ is polytopic and its exact projection can be determined computationally.
 
-The optimisation approximating the n-step controllable set $\C_n(\T)$ is then given as
+The optimisation approximating the $n$-step controllable set $\C_n(\T)$ is then given as
 %
 \begin{subequations}\label{seq:optimisation:n:step:set:abstract}
 	\begin{equation}
@@ -477,18 +511,18 @@ The optimisation approximating the n-step controllable set $\C_n(\T)$ is then gi
 \begin{rem}
 The goal of reformulating a chance constrained model predictive control setup using the proposed method would be to minimise the introduced conservatism.
 %
-To achieve the best possible performance while guaranteeing constraint satisfaction a closed loop min-max model predictive control problem would be formulated, see e.g.~\cite{Lee:1997}.
+To achieve the best possible performance while guaranteeing constraint satisfaction a closed loop min-max model predictive control problem should be formulated, see e.g.~\cite{Lee:1997}.
 %
 This means that at each stage the decision variables are constrained to be such that the successor state is guaranteed to lie on a feasible trajectory to the target set.
 %
-So that if a chance constrained model predictive control problem is reformulated as a deterministically constrained problem guaranteeing probabilistic feasibility, the sets $C_n(\T)$ would play the role of stage constraints with the target set $\T=X^\infty$ to guarantee recursive feasibility.
+Therefore to reformulate a chance constrained model predictive control problem as a deterministically constrained problem with guaranteed probabilistic feasibility and guaranteed recursive feasibility, the sets $C_n(\T)$ can be introduced as stage constraints, and the target set $\T$ can be chosen as the robust positively invariant set $X^\infty$.
 \end{rem}
 
 
 \section{The Volume of a Transformed Hypercube}\label{sec:volume:of:hypercube}
 %
 %
-In this section we present a method allowing us to optimise over polytopes as required to solve~\eqref{seq:optimisation:MRPI:abstract} and~\eqref{seq:optimisation:n:step:set:abstract}.
+In this section we present a method that enables optimisation over polytopes, as is required to solve~\eqref{seq:optimisation:MRPI:abstract} and~\eqref{seq:optimisation:n:step:set:abstract}.
 %
 For this we consider the class of parallelotopes \citep[see
 e.g.][]{Coxeter:1973}), i.e.~the minimal zonotope in $\RR^d$: 
@@ -507,7 +541,7 @@ It is well known that the volume of a parallelotope is given by
 %
 Recall that 
 \[
-\det(\lambda v_1,\dots,v_d) = \lambda\det(v_1,\dots,v_d),
+\det(\lambda v_1,v_2,\dots,v_d) = \lambda\det(v_1,\dots,v_d),
 \]
 therefore we have that for fixed $v_1,\dots,v_d$ the volume of $\spann(t_1v_1,\dots,t_dv_d)$ with $0<t_i\leq1$ is given by
 %
@@ -598,7 +632,7 @@ The uniqueness of a maximiser for the volume of a set however is less transparen
 %
 In this section we present a two dimensional example for each proposed scheme.
 %
-First we illustrate the approximation of the guaranteed positive invariant set~$X^\infty$ for the system
+First we illustrate the approximation of the guaranteed positively invariant set~$X^\infty$ for the system
 %
 \begin{equation}\label{eq:example:system:MRPI}
 	x^+ = \begin{pmatrix}0.7&-0.25\\0.25&0.7\end{pmatrix}x+\begin{pmatrix}0\\1\end{pmatrix}u+w
@@ -667,7 +701,7 @@ The resulting sets are illustrated in Figure~\ref{fig:MRPI:optimised}.
 
 \begin{figure}
 \includegraphics[width=.95\linewidth]{MRPIsetOptimised.pdf}
-\caption{The guaranteed positive invariant set of the system~\eqref{eq:example:system:MRPI} in red, blue the robust positive invariant set for the disturbance set computed with the methods discussed in~\cite{Zhang2015}.}
+\caption{The guaranteed positively invariant set of the system~\eqref{eq:example:system:MRPI} in red, blue the robust positively invariant set for the disturbance set computed with the methods discussed in~\cite{Zhang2015}.}
 \label{fig:MRPI:optimised}
 \vspace{4mm}\end{figure}
 
@@ -688,15 +722,15 @@ Again the result illustrated in figure~\ref{fig:n:step:controllable:set} can be 
 \section{Conclusion}\label{sec:conclusion}
 %
 %
-In this paper we presented a method in which the positive invariant set and the n-step controllable set of a stochastically constrained system are approximated respectively.
+In this paper we presented a method in which the positively invariant set and the $n$-step controllable set of a stochastically constrained system are approximated respectively.
 %
 The method we present is based on a simple restriction of the set $\V^\prime\subseteq$ to be a parallelotope, which yields remarkable results in simulation and does not introduce non-convex constraints in the optimisation presented.
 %
-Although the presented scheme scales well to higher dimensions, the complexity of positive invariant sets and n-step controllable sets does not.
+Although the presented scheme scales well to higher dimensions, the complexity of positively invariant sets and $n$-step controllable sets does not.
 %
 The underlying probability distribution was assumed to be uniform for ease of presentation, a similar method may be applied as long as the probability measure of a parallelotope can be analytically determined.
 %
-An additional improvement to the n-step controllable set $C_n(\T)$ could be obtained by introducing $\V_1^\prime,\dots,\V_{n-1}^\prime$, to allow different sets $\V_i^\prime$ at each stage introducing $(n-1)\times 2d$ additional decision variables.
+An additional improvement to the $n$-step controllable set $C_n(\T)$ could be obtained by introducing $\V_1^\prime,\dots,\V_{n-1}^\prime$, to allow different sets $\V_i^\prime$ at each stage introducing $(n-1)\times 2d$ additional decision variables.
 
 
 %\bibliographystyle{alpha}
