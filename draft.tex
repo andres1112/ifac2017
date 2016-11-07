@@ -61,7 +61,8 @@
 \providecommand{\spann}{\text{span}}
 \newcommand{\Obs}{\mathcal{O}}
 \providecommand{\B}{\mathcal B}
-\providecommand{\C}{\mathcal C}
+\providecommand{\C}{\mathscr C}
+\providecommand{\Xinfty}{{\mathscr X}^\infty}
 \providecommand{\E}{\mathcal E}
 \providecommand{\F}{\mathscr F}
 \providecommand{\W}{\mathcal W}
@@ -85,7 +86,7 @@
 
 \begin{frontmatter}
 
-\title{Maximising the guaranteed feasible set for uncertain MPC schemes with probabilistic constraints}%\thanksref{footnoteinfo}} 
+\title{Maximising the guaranteed feasible set for uncertain MPC schemes with chance constraints}%\thanksref{footnoteinfo}} 
 % Title, preferably not more than 10 words.
 
 
@@ -105,7 +106,7 @@ Keyword 1; keyword 2;
 
 
 \begin{abstract}                          % Abstract of not more than 250 words.
-This paper proposes a method of approximating positively invariant sets and $n$-step controllable sets of uncertain linear systems that are subject to chance constraints. The computed sets are robustly invariant and are guaranteed to satisfy the probabilistic constraints. In contrast, existing methods based on random sampling are only able to satisfy such constraints with a certain level of confidence. The proposed approach uses explicitly parametrised auxiliary disturbance sets, which are optimised so as to maximise the relevant positively invariant or $n$-step controllable set. The results are illustrated by numerical examples.
+This paper proposes a method of approximating positively invariant sets and $n$-step controllable sets of uncertain linear systems that are subject to chance constraints. The computed sets are robustly invariant and are guaranteed to satisfy the probabilistic constraints of the control problem. In contrast, existing methods based on random sampling are only able to satisfy such constraints with a fixed level of confidence. The proposed approach uses explicitly parametrised auxiliary disturbance sets, which are optimised subject to a constraint on their probability measure so as to maximise the relevant positively invariant or $n$-step controllable set. The results are illustrated by numerical examples.
 \end{abstract}
 
 \end{frontmatter}
@@ -120,7 +121,7 @@ The properties of such sets and the algorithms to compute them are well known an
 %
 As well as being objects of interest in their own right,
 %In addition to pure analysis purposes, 
-these sets are often used as terminal constraint sets model predictive control in order to guarantee the feasibility of the control scheme at all times \citep[see e.g.][]{Mayne2014}.
+these sets are often used as terminal constraint sets in Model Predictive Control (MPC) in order to guarantee the feasibility of the control scheme at all times \citep[see e.g.][]{Mayne2014}.
 %
 
 For the methods presented in~\cite{Kolmanovsky:1998} and~\cite{blanchini:2007} to be applicable, the modelled uncertainty has to be constrained to a known disturbance set, in particular a convex polytopic or ellipsoidal set.
@@ -134,7 +135,7 @@ Positively invariant sets based on samples of uncertain model parameters are oft
 %
 The method presented in~\cite{Zhang2015} determines a set in which the probabilistic requirements are met with a given confidence and uses that set for subsequent analysis.
 %
-However, for simple probability distributions, this approach does not require sampling; instead we can explicitly parametrise an auxiliary disturbance set in which all probabilistic conditions are met.
+However, for simple probability distributions such as the uniform distribution considered in this paper, this approach does not require sampling; instead we can explicitly parametrise an auxiliary disturbance set in which all probabilistic conditions are met.
 %
 Using such a parametrised set, we can perform an optimisation
 %the size of the positively invariant set 
@@ -145,7 +146,7 @@ Unlike sample based approaches, this method ensures probabilistic constraint sat
 %
 A similar principle of using parametrised sets of a specified probability measure is used in $p$-efficiency theory~\citep{Dentcheva2009}, where the distribution is not required to be simple but the structure of the chance constraints is restrictive.
 
-In order to formulate a robust model predictive control law for a chance constrained stochastic system while introducing a minimal amount of conservatism, we consider a closed-loop min-max formulation~\citep{Lee:1997}. This requires the determination of additional constraints.
+In order to formulate a robust MPC law for a chance constrained stochastic system while introducing a minimal amount of conservatism, we consider a closed-loop min-max formulation~\citep{Lee:1997}. This requires the determination of additional constraints.
 %
 The $n$-step controllable set for a given horizon $n$ and target set \citep[see e.g.][]{bertsekas71} has the property that, for every state in the $n$-step controllable set, there exists an admissible input sequence such that the system state enters the target set after $n$ steps, for any admissible sequence of uncertainty realisations.
 %
@@ -156,7 +157,7 @@ By maximising the size of the $n$-step controllable set we indirectly approximat
 %The remainder of this paper elaborates the method in the following way:
 %
 This paper is organised  as follows:
-In section~\ref{sec:setup} we present the considered problem formulation and derive, in section~\ref{ssec:approximating:MRPI}, the conditions for the positively invariant set under chance constraints. The corresponding conditions for the $n$-step controllable set are derived in section~\ref{ssec:approximating:n:step}.
+In section~\ref{sec:setup} we present the problem formulation and derive, in section~\ref{ssec:approximating:MRPI}, conditions that define the positively invariant set under chance constraints. The corresponding conditions for the $n$-step controllable set are derived in section~\ref{ssec:approximating:n:step} and these are used to define an MPC law in section~\ref{ssec:mpc}.
 %
 The parametrisation of a parallelotope is discussed in~\ref{sec:volume:of:hypercube} and the general problem formulations introduced in section~\ref{sec:setup} are made precise for this parametrisation.
 %
@@ -167,7 +168,7 @@ Two numerical examples are presented in section~\ref{sec:examples} to illustrate
 We define $v$ as a random parameter on a probability space $(\V,\F,\PP)$ and denote the probability of an event $E(v)$ as $\PP\{v\in\V : E(v)\}$.
 %; throughout this paper the probability density of $v$ is assumed to be uniform.
 %
-The set $\B_P(r) = \{x\in\RR^d:x^TPx\leq r^2\}$ denotes the $P$-ball of radius $r$ centred at the origin. For a matrix $\Gamma\in\RR^{m\times n}$ the notation $\Gamma x\leq \bfa{1}$ is to be understood element-wise, where $\bfa{1}$ is a vector of ones in $\RR^m$.
+For a positive definite matrix $P$ we write $\|x\|_P^2 = x^TPx$, and the set $\B_P(r) = \{x\in\RR^d:x^TPx\leq r^2\}$ denotes the $P$-ball of radius $r$ centred at the origin. The constraint $\Gamma x\leq \bfa{1}$, where $\Gamma\in\RR^{m\times n}$ and $\bfa{1}$ is a vector of ones in $\RR^m$, is understood to apply element-wise.
 
 
 \section{Problem formulation}\label{sec:setup}
@@ -253,16 +254,18 @@ Note that for polytopic $\Z$ and $\V^\prime$ the set $\Z\ominus\V^\prime$ can be
 In the remainder of this paper we discuss how~$\V^\prime$ can be chosen in order to obtain the largest guaranteed $n$-step controllable set for a given target set and the largest guaranteed positively invariant set for the system (\ref{eq:system}) subject to the robust constraints~(\ref{eq:state_input:constraints}) and the chance constraint (\ref{eq:probabilistic:constraint}).
 
 
-\subsection{Approximating the guaranteed invariant set}\label{ssec:approximating:MRPI}
+\section{Approximating the guaranteed invariant set}\label{ssec:approximating:MRPI}
 %
 First we discuss how to extend existing methods to calculate the maximal robust positively invariant (MRPI) set (see e.g.~\cite{blanchini:2007}) in such a way that all states in the MRPI set produce only feasible successor states for a given feedback controller $u = Kx$.
 %
-Thus we seek to determine a set of initial conditions for which all possible trajectories of (\ref{eq:system}) subject to (\ref{eq:disturbance}) satisfy the robust constraints~(\ref{eq:state_input:constraints}) and probabilistic constraint (\ref{eq:probabilistic:constraint}). Denoting the largest such set as $\X^\infty$ we have
+Thus we seek to determine a set of initial conditions for which all possible trajectories of (\ref{eq:system}) subject to (\ref{eq:disturbance}) satisfy the robust constraints~(\ref{eq:state_input:constraints}) and probabilistic constraint (\ref{eq:probabilistic:constraint}). Denoting the largest such set as $\Xinfty$ we have
 \begin{multline*}
-\X^\infty = \Bigl\{x\in\X: \\
+\Xinfty = \Bigl\{x_0\in\X: \\
 \begin{aligned}
-&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i} w_{k-i}\\
-&x_k\in\X\\
+% &x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i} w_{k-i}\\
+% &x_{k+1} = (A+BK)^{k+1} x + \sum_{i=1}^{k+1} (A+BK)^{k+1-i} w_{k+1-i}\\
+&x_{k+1} = (A+BK)^{k+1} x_0 + \sum_{i=0}^{k} (A+BK)^{k-i} w_{i}\\
+&x_{k+1}\in\X\\
 &Kx_k\in\U\\
 &\PP\{v\in\V : (C+DK)x_k+v\in\Y\}\geq p 
 \end{aligned}\\
@@ -278,27 +281,28 @@ Thus we seek to determine a set of initial conditions for which all possible tra
 % \end{aligned} 
 % \end{multline}
 %
-% It is obvious that $X^\infty$ contained in the invariant set of the original problem~$\X^\infty$:
+% It is obvious that $X^\infty$ contained in the invariant set of the original problem~$\Xinfty$:
 For a given set $\V^\prime$, let $X^\infty$ denote the set
 %
 \begin{multline}\label{eq:alternative:MRPI:set}
-	X^\infty = \Bigl\{x\in\X: \\
+	X^\infty = \Bigl\{x_0\in\X: \\
 \begin{aligned} 
-&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i} w_{k-i} \\
-&x_k\in\X \\ 
+%&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i} w_{k-i} \\
+&x_{k+1} = (A+BK)^{k+1} x_0 + \sum_{i=0}^{k} (A+BK)^{k-i} w_{i} \\
+&x_{k+1}\in\X \\ 
 &Kx_k\in\U \\
 &(C+DK)x_k+v_k\in\Y
 \end{aligned}\\
 \forall w_k\in\W,\ \forall v_k\in \V^\prime,\ \forall k\geq 0 \Bigr\} .
 \end{multline}
 % \begin{equation}
-% 	\X^\infty = \left\{x\in\X: \begin{aligned}&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i-1} w_{k-i}\\
+% 	\Xinfty = \left\{x\in\X: \begin{aligned}&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i-1} w_{k-i}\\
 % 	&x_k\in\X\\
 % 	&\PP\{(C+DK)x_k+v\in\Y\}\geq p\\
 % 	&\forall w_j\in\W,k\geq 0\end{aligned} \right\}
 % \end{equation}
 %
-Then from Proposition~\ref{prop1}, the inclusion $X^\infty\subseteq\X^\infty$ necessarily holds for any $\V^\prime\subseteq\V$ with probability measure $\PP\{\V^\prime\} \geq p$. Furthermore, by maximising the volume of $X^\infty$, we can improve the approximation of $\X^\infty$.
+Then from Proposition~\ref{prop1}, the inclusion $X^\infty\subseteq\Xinfty$ necessarily holds for any $\V^\prime\subseteq\V$ with probability measure $\PP\{\V^\prime\} \geq p$. Furthermore, by maximising the volume of $X^\infty$, we can improve the approximation of $\Xinfty$.
 
 
 In order to determine an algorithm to compute $X^\infty$ we rewrite the conditions in~\eqref{eq:alternative:MRPI:set} by introducing the set of all possible successor states~$\D_k(X)$ of states in $X$ after $k$ time steps:
@@ -386,46 +390,51 @@ since $X_{d-1}$ is bounded and $\E_k$ expands exponentially, there must exist a 
 %
 \epf
 
-An optimisation program to approximate the positively invariant set $\X^\infty$ can therefore be formulated as
+An optimisation problem whose solution approximates the maximal guaranteed positively invariant set $\Xinfty$ can therefore be formulated as
 %
 \begin{subequations}\label{seq:optimisation:MRPI:abstract}
-	\begin{equation}
-		\max_{\V^\prime} \vol(X^\infty)
-	\end{equation}
+\begin{align}
+		& \max_{\V^\prime} \vol(X^\infty) \\
+%\end{align}
 %
-	subject to
+\intertext{subject to}
 %
-\begin{equation}
-	\V^\prime\subseteq\V
-\end{equation}
-%
-\begin{equation}
-	\vol(\V^\prime)\geq p\cdot\vol(\V)
-\end{equation}
+%\begin{align}
+	& \V^\prime\subseteq\V \\
+% \end{equation}
+% %
+% \begin{equation}
+	& \vol(\V^\prime)\geq p\cdot\vol(\V)
+\end{align}
 \end{subequations}
 %
-In section~\ref{sec:volume:of:hypercube} we discuss how this optimisation can be solved using parallelotopes for~$\V^\prime$.
+In section~\ref{sec:volume:of:hypercube} we discuss how this optimisation can be solved using a parallelotope parameterisation of~$\V^\prime$.
 
 
-\subsection{Approximating the $n$-step controllable set}\label{ssec:approximating:n:step}
+\section{Approximating the guaranteed $n$-step controllable set}\label{ssec:approximating:n:step}
 %
 We now turn our attention to the $n$-step controllable set~$\C_n(\T)$ for a given target set~$\T$.
 %
 That is the set of initial conditions $x_0\in\C_n(\T)$ such that a sequence of control inputs exists that drives the state in $n$ steps to the target set, $x_n\in\T$, for all admissible disturbance sequences 
 $w\in\W$, while guaranteeing that the robust state and input constraints~(\ref{eq:state_input:constraints}) and the probabilistic constraint~(\ref{eq:probabilistic:constraint}) are satisfied.
 %
-This set is given by
+This is defined as the set of initial conditions $x_0\in\X$ such that a sequence of control inputs exists that drives the state in $n$ steps to the target set, so that $x_n\in\T$ for all admissible disturbance sequences 
+$w_k\in\W$, $k=0,\ldots,n-1$, while guaranteeing that the robust state and input constraints 
+%$x_k\in\X$, $u_k\in\U$
+(\ref{eq:state_input:constraints}) and the probabilistic constraint~(\ref{eq:probabilistic:constraint}) are satisfied.
+%
+Thus $\C_n(\T)$ can be expressed as follows.
 %
 \begin{multline*}
 \C_n(\T) = \Bigl\{x_0\in\X: \exists \bigl\{u_0(\cdot),\ldots,u_{n-1}(\cdot)\bigr\}\\
 \begin{aligned}
-&x_k = A^k x_0 + \sum_{i=1}^{k} A^{k-i}B u_{k-i}(x_{k-i}) + \sum_{i=1}^{k} A^{k-i} w_{k-i}\\
+&x_{k+1} = A^{k+1} x_0 + \sum_{i=0}^{k} A^{k-i}B u_{i}(x_{i}) + \sum_{i=0}^{k} A^{k-i} w_{i}\\
 &x_n\in\T\\
-&x_k\in\X\\
+&x_{k+1}\in\X\\
 &u_k(x_k)\in\U\\
 &\PP\bigl\{v\in\V : Cx_k + Du_k(x_k) +v \in\Y\bigr\}\geq p
 \end{aligned}\\
-\forall w_k\in\W,\, \forall k\in\{ 0, \ldots , n\} \Bigr\}	
+\forall w_k\in\W,\, \forall k\in\{ 0, \ldots , n-1\} \Bigr\}	
 \end{multline*}
 % \begin{equation}
 % 	\C_n(\T) = \left\{x\in\X:\begin{aligned}&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i-1} w_{k-i}\\
@@ -435,18 +444,18 @@ This set is given by
 % 	&\forall w_j\in\W,k\geq 0\end{aligned} \right\}	
 % \end{equation}
 %
-Again, it is easy to verify that the set
+Using Proposition~\ref{prop1} it is easy to verify that the set $C_n(\T)$ defined by
 %
 \begin{multline*}
-C_n(\T) = \Bigl\{ x\in\X: \exists \bigl\{u_0(\cdot),\ldots,u_{n-1}(\cdot)\bigr\}\\
+C_n(\T) = \Bigl\{ x_0\in\X: \exists \bigl\{u_0(\cdot),\ldots,u_{n-1}(\cdot)\bigr\}\\
 \begin{aligned}
-&x_k = A^k x_0 + \sum_{i=1}^{k} A^{k-i}B u_{k-i}(x_{k-i}) + \sum_{i=1}^{k} A^{k-i} w_{k-i}\\
+&x_{k+1} = A^{k+1} x_0 + \sum_{i=1}^{k} A^{k-i}B u_{i}(x_{i}) + \sum_{i=1}^{k} A^{k-i} w_{i}\\
 &x_N\in\T\\
-&x_k\in\X\\
+&x_{k+1}\in\X\\
 &u_k(x_k)\in\U \\
 &Cx_k+Du_k(x_k) + v_k \in\Y
 \end{aligned}\\
-\forall w_j\in\W,\, \forall v_k\in \V^\prime,\, \forall k\in\{0,\dots,n\} \Bigr\}	
+\forall w_k\in\W,\, \forall v_k\in \V^\prime,\, \forall k\in\{0,\dots,n-1\} \Bigr\}	
 \end{multline*}
 % \begin{equation}
 % 	C_n(\T) = \left\{x\in\X:\begin{aligned}&x_k = (A+BK)^k x + \sum_{i=1}^{k} (A+BK)^{k-i-1} w_{k-i}\\
@@ -456,9 +465,9 @@ C_n(\T) = \Bigl\{ x\in\X: \exists \bigl\{u_0(\cdot),\ldots,u_{n-1}(\cdot)\bigr\}
 % 	&\forall w_j\in\W,v\in \V^\prime,k\in\{0,\dots,N\}\end{aligned} \right\}	
 % \end{equation}
 %
-is necessarily contained in $\C_n(\T)$ for any $\V^\prime\subseteq\V$ with measure $\PP\{\V^\prime\} \geq p$.
+is necessarily contained in $\C_n(\T)$ for any $\V^\prime\subseteq\V$ with probability measure $\PP\{\V^\prime\} \geq p$.
 %
-As in the case of the positively invariant set, fixing $\V^\prime$ to be a polytopic set leads to a computationally tractable optimisation for the maximisation of~$C_n$. This suggests an algorithm for constructing $C_n$ as a polytopic approximation of~$\C_n$ by optimising~$\V^\prime$ so as to maximise the volume of~$C_n$.
+As in the case of positively invariant sets, fixing $\V^\prime$ to be a polytopic set leads to a computationally tractable optimisation for the maximisation of~$C_n$. This suggests an algorithm for constructing $C_n$ as a polytopic approximation of~$\C_n$ by optimising~$\V^\prime$ so as to maximise the volume of~$C_n$.
 % indirectly improves the approximation of $\C_n$.
 %
 It is known that 
@@ -472,13 +481,22 @@ In particular the one-step controllable set $C_1(\T)$ for a polytopic~$\T$
 % \]
 is given by the projection of 
 %
+In particular, the one-step controllable set $C_1(\T)$ for the polytopic target set~$\T$
+% \[
+% \T = \Bigl\{x\in\RR^d : J_i x\leq1,\ i\leq M_\T\Bigr\}
+% \]
+is given by the projection of
+$L_1(\T)\subset \RR^{d+q_{\U}}$, 
+%$L_1(\T)\subset \RR^d\times \RR^{q_{\U}}$, 
+defined by
+%
 \begin{multline*}
 L_1(\T) = \Bigl\{(x,u)\in (\X,\U): \\
 \begin{aligned}
 & Cx+Du + v\in\Y \\
 & Ax+Bu+w\in\T
 \end{aligned}\\
-\forall v\in\V^\prime,\, \forall w\in\W\Bigr\}
+\forall v\in\V^\prime,\, \forall w\in\W\Bigr\} ,
 %\end{aligned}
 \end{multline*}
 % \begin{equation}
@@ -488,41 +506,85 @@ L_1(\T) = \Bigl\{(x,u)\in (\X,\U): \\
 % 	\end{aligned}\right\}
 % \end{equation}
 %
-onto $\RR^d$.
+onto the $x$-subspace.
 %
+Thus
+\[
+C_1(\T) = \{ x : \exists u \ \text{such that} \ (x,u)\in L_1(\T)\}.
+\]
 As all involved sets are polytopic, $L_1(\T)$ is polytopic and its exact projection can be determined computationally.
 
-The optimisation approximating the $n$-step controllable set $\C_n(\T)$ is then given as
+A set $C_n(\T)$ approximating the $n$-step controllable set $\C_n(\T)$ is then given by the solution of the optimisation:
 %
 \begin{subequations}\label{seq:optimisation:n:step:set:abstract}
-	\begin{equation}
-		\max_{\V^\prime} \vol(C_n(\T))
-	\end{equation}
-	subject to
-	\begin{equation}
-	\V^\prime\subseteq\V
-\end{equation}
-%
-\begin{equation}
-	\vol(\V^\prime)\geq p\cdot\vol(\V)
-\end{equation}
+\begin{align}
+	& \max_{\V^\prime} \vol(C_n(\T))
+%\end{equation}
+\intertext{subject to}
+%\begin{align}
+	& \V^\prime\subseteq\V  \\
+% \end{equation}
+% %
+% \begin{equation}
+	& \vol(\V^\prime)\geq p\cdot\vol(\V)
+\end{align}
 \end{subequations}
+The property $C_n(\T)\subseteq \C_n(\T)$ then guarantees the existence of a control sequence such that the constraints~(\ref{eq:state_input:constraints}) and (\ref{eq:probabilistic:constraint}) are met and $x_n\in\T$ for all $x_0\in C_n(\T)$.
 
-\begin{rem}
-The goal of reformulating a chance constrained model predictive control setup using the proposed method would be to minimise the introduced conservatism.
-%
-To achieve the best possible performance while guaranteeing constraint satisfaction a closed loop min-max model predictive control problem should be formulated, see e.g.~\cite{Lee:1997}.
-%
-This means that at each stage the decision variables are constrained to be such that the successor state is guaranteed to lie on a feasible trajectory to the target set.
-%
-Therefore to reformulate a chance constrained model predictive control problem as a deterministically constrained problem with guaranteed probabilistic feasibility and guaranteed recursive feasibility, the sets $C_n(\T)$ can be introduced as stage constraints, and the target set $\T$ can be chosen as the robust positively invariant set $X^\infty$.
-\end{rem}
+Note that an additional improvement to the $n$-step controllable set $C_n(\T)$ could be obtained by introducing $\V_1^\prime,\dots,\V_{n-1}^\prime$, to allow different sets $\V_i^\prime$ at each stage.
+% introducing $(n-1)\times 2d$ additional decision variables.
 
+\section{Model Predictive Control}\label{ssec:mpc}
 
-\section{The Volume of a Transformed Hypercube}\label{sec:volume:of:hypercube}
+The method proposed for computing $n$-step controllable sets in section~\ref{ssec:approximating:n:step} can be used to formulate a chance constrained Model Predictive Control law. In order to minimise conservatism while guaranteeing constraint satisfaction, a closed loop MPC scheme should be used \citep[see e.g.][]{Lee:1997}.
+This involves computing (offline) the set $X^\infty$ using \mbox{(\ref{seq:optimisation:MRPI:abstract}a-c)}, and the 
+sets $C_{i}(X^\infty) = C_1\bigl(C_{i-1}(X^\infty)\bigr)$ and $L_{i}(X^\infty) = L_1\bigl(C_{i-1}(X^\infty)\bigr)$ 
+for $i=1,\ldots,n$ by repeated application of (\ref{seq:optimisation:n:step:set:abstract}a-c) with $C_0(X^\infty)= X^\infty$.
+Online, at each time step $k=0,1,\ldots$, a min-max MPC law is defined by 
+\[
+u_k = u^{(n)}(x_k)
+\]
+where $u^{(n)}(x_k)$ is the solution of
+%
+\[%\begin{equation}
+\begin{aligned}
+\Bigl( u^{(n)} (x_k) , w^{(n)} (x_k,u) \Bigr) &= \arg \min_{u} \Bigl\{ \max_{w\in\W} J^{(n)}(x_k,u,w)  
+\\
+&\ \quad \text{subject to}\ (x_k, u) \in L_n(\T)
+\Bigr\}
+\end{aligned}
+\]%\end{equation}
+and $J^{(n)}$ is defined by the recursion, for $i=1,\ldots,n$:
+\begin{align*}
+&J^{(i)}(x,u,w) = \tfrac{1}{2}\bigl( \| x \|^2_Q + \| u \|^2_R -
+\gamma^2 \| w \|^2\bigr) + J^{(i-1)}(x^+) 
+\\
+&J^{(i-1)}(x) = J^{(i-1)}\bigl(x,u^{(i-1)}(x),w^{(i-1)}(x,u^{(i-1)}(x))\bigr) \\
+&x^+ = Ax + Bu + Dw
+\end{align*}
+with terminal cost $J^{(0)} = \frac{1}{2}\|x\|_{P_0}^2$.
+%for some suitable terminal weighting matrix $P_0$.
+
+An algorithm for solving the online optimization of this min-max robust MPC law is given in~\citet{Buerger2016}. 
+%
+Since the stage constraints are constructed using the controllable sets $C_{i}(X^\infty)$, the decision variables are constrained at each stage to be such that the successor state is guaranteed to lie on a feasible trajectory to the target set $X^\infty$. Therefore the MPC law solves a deterministically constrained problem with guaranteed probabilistic feasibility and guaranteed recursive feasibility.
+
+% \begin{rem}
+% The goal of reformulating a chance constrained model predictive control setup using the proposed method would be to minimise the introduced conservatism.
+% %
+% To achieve the best possible performance while guaranteeing constraint satisfaction a closed loop min-max model predictive control problem should be formulated \cite[see e.g.][]{Lee:1997}.
+% %
+% This means that at each stage the decision variables are constrained to be such that the successor state is guaranteed to lie on a feasible trajectory to the target set.
+% %
+% Therefore to reformulate a chance constrained model predictive control problem as a deterministically constrained problem with guaranteed probabilistic feasibility and guaranteed recursive feasibility, the sets $C_n(\T)$ can be introduced as stage constraints, and the target set $\T$ can be chosen as the robust positively invariant set $X^\infty$.
+% \end{rem}
+
+%\section{The Volume of a Transformed Hypercube}\label{sec:volume:of:hypercube}
+
+\section{Parameterisation using  parallelotopes}\label{sec:volume:of:hypercube}
 %
 %
-In this section we present a method that enables optimisation over polytopes, as is required to solve~\eqref{seq:optimisation:MRPI:abstract} and~\eqref{seq:optimisation:n:step:set:abstract}.
+In this section we present a method that enables optimisation over polytopes, as is required to solve~(\ref{seq:optimisation:MRPI:abstract}a-c) and~(\ref{seq:optimisation:n:step:set:abstract}a-c).
 %
 For this we consider the class of parallelotopes \citep[see
 e.g.][]{Coxeter:1973}), i.e.~the minimal zonotope in $\RR^d$: 
@@ -549,13 +611,14 @@ therefore we have that for fixed $v_1,\dots,v_d$ the volume of $\spann(t_1v_1,\d
 	\vol\Bigl(\spann(t_1v_1,\dots,t_dv_d)\Bigr) = \abs{\det(v_1,\dots,v_d)}\prod_{i=1}^d t_i
 \end{equation}
 %
-It is known that the volume of an object is translation invariant, i.e. 
+%It is known that the volume of an object is translation invariant, i.e. 
+and since the volume of an object is translation invariant we have 
 \begin{multline*}
 \vol\Bigl(\spann(t_1v_1,\dots,t_dv_d)\oplus\{v_0\}\Bigr) \\
 = \vol\Bigl(\spann(t_1v_1+v_0,\dots,t_dv_d+v_0)\Bigr) \\
 = \vol\Bigl(\spann(t_1v_1,\dots,t_dv_d)\Bigr).
 \end{multline*}
-By using $v_0$ and $t_i$ as decision variables we can solve~\eqref{seq:optimisation:MRPI:abstract} and~\eqref{seq:optimisation:n:step:set:abstract} by solving an optimisation program with $2d$ decision variables.
+Using $v_0$ and $t_i$ as decision variables we can solve~(\ref{seq:optimisation:MRPI:abstract}a-c) and~(\ref{seq:optimisation:n:step:set:abstract}a-c) by solving an optimisation program with $2d$ decision variables.
 %
 All geometric calculations necessary to compute~\eqref{seq:optimisation:MRPI:abstract} and~\eqref{seq:optimisation:n:step:set:abstract} can be performed using the vertex description of $\V^\prime$, which can easily be shown to be
 %
@@ -566,7 +629,7 @@ All geometric calculations necessary to compute~\eqref{seq:optimisation:MRPI:abs
 where $\lambda_i$ are the vertices of the unit box $U = \{\lambda\in\RR^d:0\leq\lambda_i\leq 1\}$.
 
 
-The problem formulation~\eqref{seq:optimisation:MRPI:abstract} can therefore be reformulated as
+The optimisation~(\ref{seq:optimisation:MRPI:abstract}a-c) can therefore be reformulated as
 %
 \begin{subequations}\label{seq:optimisation:MRPI:precise}
 \begin{equation}
@@ -611,8 +674,9 @@ subject to
 \end{equation}
 \end{subequations}
 %
-
 Note that~\eqref{eq:containment:linear:1} and~\eqref{eq:linear:inequalites:on:t:1} are linear constraints on $v_0$ and $t_i$, furthermore recall that $\prod_i t_i \geq c$, for a constant $c$, is convex for $t_i>0$, so that the constraints in~\eqref{seq:optimisation:MRPI:precise} and~\eqref{seq:optimisation:n:step:precise} are convex.
+%
+Note that~\eqref{eq:containment:linear:1} and~\eqref{eq:linear:inequalites:on:t:1} are linear constraints on $v_0$ and $t_i$, furthermore recall that $\prod_i t_i \geq c$, for constant $c$, is convex for $t_i>0$, so that the constraints in~(\ref{seq:optimisation:MRPI:precise}a-d) and~(\ref{seq:optimisation:n:step:precise}a-d) are convex.
 %
 Note also that the constraints (\ref{eq:containment:linear:1}) and (\ref{eq:containment:linear:2}) are equivalent to
 \[
@@ -623,39 +687,41 @@ whereas the constraints (\ref{eq:measure:p:1}) and (\ref{eq:measure:p:2}) are eq
 \frac{\vol(\V^\prime)}{\vol(\V)}\geq p.
 \]
 %
-The uniqueness of a maximiser for the volume of a set however is less transparent and can in general not be guaranteed.
+However, the uniqueness of a maximiser for the volume in the objective functions (\ref{seq:optimisation:MRPI:precise}a) and (\ref{seq:optimisation:n:step:precise}a) is less transparent and cannot be guaranteed in general.
 
 
 \section{Computational Examples}\label{sec:examples}
 %
 %
 %
-In this section we present a two dimensional example for each proposed scheme.
+In this section we use a two dimensional example to illustrate the computation of guaranteed invariant and guaranteed $n$-step controllable sets.
 %
-First we illustrate the approximation of the guaranteed positively invariant set~$X^\infty$ for the system
+First we illustrate the approximation of the maximal guaranteed positively invariant set~$\X^\infty$ for the system
 %
 \begin{equation}\label{eq:example:system:MRPI}
 	x^+ = \begin{pmatrix}0.7&-0.25\\0.25&0.7\end{pmatrix}x+\begin{pmatrix}0\\1\end{pmatrix}u+w
 \end{equation}
 %
 subject to the constraints 
-\begin{align*}
-\X &= \{x:\norm{x}_\infty\leq15\}, \\
-\U &= \{u:\abs{u}\leq2\}, \\
-\W &= \{w:\norm{w}_1\leq1\}.
-\end{align*}
+\begin{equation}\label{eq:example:rconstriaints}
+\begin{aligned}
+\X &= \{x\in\RR^2 :\norm{x}_\infty\leq15\}, \\
+\U &= \{u\in\RR :\abs{u}\leq2\}, \\
+\W &= \{w\in\RR^2 :\norm{w}_1\leq1\}.
+\end{aligned}
+\end{equation}
 %
 The output 
 %
-\begin{equation}
+\[%\begin{equation}
 	y = \begin{pmatrix}-0.08&-0.05\\
    -0.14&   -0.04\end{pmatrix}x + \begin{pmatrix}
 0.44\\0.44\end{pmatrix}u + v
-\end{equation}
+\]%\end{equation}
 %
 is subject to the probabilistic constraint
 %
-\begin{equation}
+\begin{equation}\label{eq:example:pconstriaint}
 	\PP\{\norm{y}_\infty\leq 1\}\geq 0.3
 \end{equation}
 %
@@ -669,24 +735,25 @@ To compute a feedback controller $u=Kx$ we use a LQR design with $Q=I$ and $R=1$
 %
 As span vectors we use 
 \[
-v_1 = \begin{pmatrix} 0.07 \\ 0.08\end{pmatrix} \quad \text{and}\quad 
-v_2 = \begin{pmatrix}-0.07 \\ 0.08\end{pmatrix},
+v_1 = \begin{pmatrix} 0.08 \\ 0.07\end{pmatrix} \quad \text{and}\quad 
+v_2 = \begin{pmatrix}-0.08 \\ 0.07\end{pmatrix},
 \] 
 which means that $\V^\prime$ is a scaled version of $\V$.
 %
-Although we can not make statements on convexity of the volume in this parametrisation the optimisation converges to the same maximiser for different initialisers, furthermore numeric evaluation of the Hessian at the maximiser reveals that one eigenvalue vanishes. 
+Although we are unable to make a statement on convexity of the volume $\vol(X^\infty)$ in this parametrisation, the optimisation converges to the same maximiser for different initialisers. Numerical evaluation of the Hessian reveals that this is indeed a (local) maximum point, although one eigenvalue vanishes at the solution.
+%, furthermore numerical evaluation of the Hessian at the maximiser reveals that one eigenvalue vanishes. 
 %
 
-In order to compare the proposed method with existing results we compute a sample based set as described in~\cite{Zhang2015}, that is we compute the smallest set containing enough samples guarantee constraint satisfaction with a confidence of $1-\beta$.
+In order to compare the proposed method with existing results we compute a sample-based set as described in~\cite{Zhang2015}, that is we compute the smallest set $\V^\prime$ containing enough samples to guarantee constraint satisfaction with a confidence of $1-\beta$.
 %
-To obtain a comparable result we use again use a scaled version of $\V$, so that the optimisation is given as
+To obtain a comparable result we use again use a scaled version of $\V$, so that the optimisation~\citep[eq.~(10)]{Zhang2015} is given as
 %
 \begin{subequations}\label{eq:comparison:set}
 \begin{equation}\min_{\gamma_1,\dots,\gamma_4} \  \ \sum_{i=1}^4\gamma_i
 \end{equation}
 subject to 
 \begin{equation}
-\Gamma_i \bfa{v}^{(j)}\leq \gamma_i ,\ i\in\{1,\dots,4\}
+\Gamma_i \hat{v}^{(j)}\leq \gamma_i ,\ i\in\{1,\ldots,4\}, \ j = 1,\ldots,N
 \end{equation}
 \end{subequations}
 % \begin{equation}\label{eq:comparison:set}\begin{split}
@@ -694,7 +761,10 @@ subject to
 % 	\text{s.t.}&\quad \Gamma_i \bfa{v}^{(j)}\leq \gamma_i ,i\in\{1,\dots,4\}
 % \end{split}\end{equation}
 %
-Where $\bfa{v}^{(j)}$ are the samples used to satisfy the probabilistic requirements with the given confidence of $\beta=1e-3$, the number of samples necessary to satisfy this requirement is given by cumulative binomial distribution but can be overestimated to be $N \geq \frac{2}{\beta}(2-\log(p))$, so for our choice $N = 4714$.
+Where $\V = \{v : \Gamma_i v \leq 1, \, i =1, \ldots ,4\}$ and
+%$\hat{v}^{(j)}$, $j=1,\ldots,N$ 
+$\hat{v}^{(1)},\ldots,\hat{v}^{(N)}$
+are the samples used to satisfy the probabilistic requirements with the given confidence of $\beta=0.001$. The number of samples that are needed to satisfy this requirement is given by the cumulative binomial distribution, but can be overestimated to be $N \geq \frac{2}{\beta}(2-\log(p))$, so for this example $N = 4714$.
 %
 The resulting sets are illustrated in Figure~\ref{figure:V:prime:and:comparison} and~\ref{fig:MRPI:optimised}.
 %
@@ -708,7 +778,12 @@ The resulting sets are illustrated in Figure~\ref{figure:V:prime:and:comparison}
 
 \begin{figure}
 \includegraphics[width=.95\linewidth]{MRPIsetOptimised.pdf}
-\caption{The guaranteed positively invariant set of the system~\eqref{eq:example:system:MRPI} in solid red, in dashed blue the robust positively invariant set for the disturbance set computed with the methods discussed in~\cite{Zhang2015}.}
+% \caption{The guaranteed positively invariant set of the system~\eqref{eq:example:system:MRPI} in solid red, in dashed blue the robust positively invariant set for the disturbance set computed with the methods discussed in~\cite{Zhang2015}.}
+\caption{The guaranteed positively invariant set $X^\infty$ computed using~(\ref{seq:optimisation:MRPI:abstract}a-c) 
+%of the system~\eqref{eq:example:system:MRPI} 
+in red, and in blue the robust positively invariant set for the disturbance set computed using the methods discussed in~\cite{Zhang2015} with 
+%a confidence level of $0.999$.}
+confidence $1-\beta$, $\beta = 0.001$.}
 \label{fig:MRPI:optimised}
 \vspace{4mm}\end{figure}
 
@@ -717,27 +792,42 @@ For the same setup~\eqref{eq:example:system:MRPI} we approximate the guaranteed 
 %
 Again the result illustrated in Figure~\ref{fig:n:step:controllable:set} can be reproduced using different initial values although the Hessian at the maximiser has a non-trivial nullspace.
 %
+For the same system and constraints (\ref{eq:example:system:MRPI})-(\ref{eq:example:pconstriaint}) we approximate the guaranteed 3-step controllable set $\C_3(\T)$, where $\T=\{x:\norm{x}_\infty\leq 2\}$
+%
+by solving (\ref{seq:optimisation:n:step:set:abstract}a-c) for $C_1(\T)$, $C_2(\T)$, $C_3(\T)$.
+%
+Again the result illustrated in Figure~\ref{fig:n:step:controllable:set} is reproduced using different initial values although the Hessian at the maximiser has a non-trivial nullspace.
+%
 
 \begin{figure}
 \includegraphics[width=.95\linewidth]{NStepSetOptimised.pdf}
-\caption{Approximation of the guaranteed 3-step controllable set for a guaranteed positive invariant set $X^\infty$ (in blue). The additional sets are remaining $C_1(X^\infty),C_2(X^\infty)$ and $C_3(X^\infty)$ dashed for the comparison set obtained with~\eqref{eq:comparison:set} and solid for the optimised~$\V^\prime$ obtained with the proposed method.}
+% \caption{Approximation of the guaranteed 3-step controllable set for a guaranteed positive invariant set $X^\infty$ (in blue). The additional sets are remaining $C_1(X^\infty),C_2(X^\infty)$ and $C_3(X^\infty)$ dashed for the comparison set obtained with~\eqref{eq:comparison:set} and solid for the optimised~$\V^\prime$ obtained with the proposed method.}
+\caption{Approximation of the guaranteed 3-step controllable set for a box $\T$ (in blue). Sets $C_1(\T)$, $C_2(\T)$ and $C_3(\T)$ computed by optimising $\V^\prime$ using  (\ref{seq:optimisation:n:step:set:abstract}a-c) are shown in solid lines. For comparison, the controllable sets obtained with~\eqref{eq:comparison:set} with 
+confidence $1-\beta$, $\beta = 0.001$ are shown in dashed lines.}
 \label{fig:n:step:controllable:set}
 \vspace{4mm}\end{figure}
 
 
 
-\section{Conclusion}\label{sec:conclusion}
+\section{Conclusions and future work}\label{sec:conclusion}
 %
 %
-In this paper we presented a method in which the positively invariant set and the $n$-step controllable set of a stochastically constrained system are approximated respectively.
+In this paper we present methods for approximating the positively invariant set and the $n$-step controllable set of a chance constrained stochastic system.
 %
 The method we present is based on a simple restriction of the set $\V^\prime\subseteq\V$ to be a parallelotope, which yields remarkable results in simulation and does not introduce non-convex constraints in the optimisation presented.
 %
-Although the presented scheme scales well to higher dimensions, the complexity of positively invariant sets and $n$-step controllable sets does not.
+The approach we present is based on a simple restriction of the set $\V^\prime$ to be a parallelotope; this yields remarkable results in simulations and avoids the introduction of non-convex constraints in the optimisation problems (\ref{seq:optimisation:MRPI:abstract}a-c) and \mbox{(\ref{seq:optimisation:n:step:set:abstract}a-c)}.
+ %
+
+Although the presented scheme scales well to higher dimensions, the complexity of positively invariant sets and $n$-step controllable sets does not in general, and this could lead to computational intractability in the objective functions (\ref{seq:optimisation:MRPI:abstract}a) and (\ref{seq:optimisation:n:step:set:abstract}a) when the state dimension $d$ is large.
 %
-The underlying probability distribution was assumed to be uniform for ease of presentation, a similar method may be applied as long as the probability measure of a parallelotope can be analytically determined.
+
+The underlying probability distribution was assumed to be uniform for ease of presentation, a similar method may be applied to more general distributions as long as they allow the probability measure of a parallelotope to be analytically determined.
 %
-An additional improvement to the $n$-step controllable set $C_n(\T)$ could be obtained by introducing $\V_1^\prime,\dots,\V_{n-1}^\prime$, to allow different sets $\V_i^\prime$ at each stage introducing $(n-1)\times 2d$ additional decision variables.
+Future work will remove this restriction by approximating non-uniform probability distributions as discrete distributions defined by collections of spatially distributed point masses.
+%
+This would necessarily introduce a degree of uncertainty in the probability measure of $\V^\prime$. However the uncertainty would be subject to deterministic bounds (rather than the statistical bounds provided by sample based approaches), which would allow for guarantees of constraint satisfaction. 
+
 
 
 %\bibliographystyle{alpha}
