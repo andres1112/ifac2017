@@ -411,7 +411,7 @@ In section~\ref{sec:volume:of:hypercube} we discuss how this optimisation can be
 %
 We now turn our attention to the $n$-step controllable set~$\C_n(\T)$ for a given target set~$\T$.
 %
-That is the set of initial conditions $x_0\in\C_n$ such that a sequence of control inputs exists that drives the state in $n$ steps to the target set, $x_n\in\T$, for all admissible disturbance sequences 
+That is the set of initial conditions $x_0\in\C_n(\T)$ such that a sequence of control inputs exists that drives the state in $n$ steps to the target set, $x_n\in\T$, for all admissible disturbance sequences 
 $w\in\W$, while guaranteeing that the robust state and input constraints~(\ref{eq:state_input:constraints}) and the probabilistic constraint~(\ref{eq:probabilistic:constraint}) are satisfied.
 %
 This set is given by
@@ -466,10 +466,10 @@ It is known that
 $C_n(\T) = C^n_1(\T) \doteq C_1 \circ C_1 \circ \cdots \circ C_1(\T)$ 
 \citep[see e.g.][]{blanchini:2007}, which allows the use of simple computational geometry algorithms.
 
-In particular the one-step controllable set $C_1(\T)$ for 
-\[
-\T = \Bigl\{x\in\RR^d : J_i x\leq1,\ i\leq M_\T\Bigr\}
-\]
+In particular the one-step controllable set $C_1(\T)$ for a polytopic~$\T$
+% \[
+% \T = \Bigl\{x\in\RR^d : J_i x\leq1,\ i\leq M_\T\Bigr\}
+% \]
 is given by the projection of 
 %
 \begin{multline*}
@@ -612,7 +612,7 @@ subject to
 \end{subequations}
 %
 
-Note that~\eqref{eq:containment:linear:1} and~\eqref{eq:linear:inequalites:on:t:1} are linear constraints on $v_0$ and $t_i$, furthermore recall that $\prod_i t_i \geq c$, for constant $c$, is convex for $t_i>0$, so that the constraints in~\eqref{seq:optimisation:MRPI:precise} and~\eqref{seq:optimisation:n:step:precise} are convex.
+Note that~\eqref{eq:containment:linear:1} and~\eqref{eq:linear:inequalites:on:t:1} are linear constraints on $v_0$ and $t_i$, furthermore recall that $\prod_i t_i \geq c$, for a constant $c$, is convex for $t_i>0$, so that the constraints in~\eqref{seq:optimisation:MRPI:precise} and~\eqref{seq:optimisation:n:step:precise} are convex.
 %
 Note also that the constraints (\ref{eq:containment:linear:1}) and (\ref{eq:containment:linear:2}) are equivalent to
 \[
@@ -696,24 +696,31 @@ subject to
 %
 Where $\bfa{v}^{(j)}$ are the samples used to satisfy the probabilistic requirements with the given confidence of $\beta=1e-3$, the number of samples necessary to satisfy this requirement is given by cumulative binomial distribution but can be overestimated to be $N \geq \frac{2}{\beta}(2-\log(p))$, so for our choice $N = 4714$.
 %
-The resulting sets are illustrated in Figure~\ref{fig:MRPI:optimised}.
+The resulting sets are illustrated in Figure~\ref{figure:V:prime:and:comparison} and~\ref{fig:MRPI:optimised}.
 %
+\begin{figure}
+\includegraphics[width=.95\linewidth]{Vprime.pdf}
+\caption{The set~$\V^\prime$ resulting the optimisation~\eqref{seq:optimisation:MRPI:precise} for the discussed requirements in \textcolor[rgb]{0.9255,0.6902,0.2078}{yellow} with $\PP\{v\in\V^\prime\}=0.3$, and in \textcolor{red}{red}, the set satisfying~\eqref{eq:comparison:set}, with the defining samples. The comparison set contains $99.91$\% of the total volume of $\V$.}
+\label{figure:V:prime:and:comparison}
+\vspace{4mm}
+\end{figure}
+
 
 \begin{figure}
 \includegraphics[width=.95\linewidth]{MRPIsetOptimised.pdf}
-\caption{The guaranteed positively invariant set of the system~\eqref{eq:example:system:MRPI} in red, blue the robust positively invariant set for the disturbance set computed with the methods discussed in~\cite{Zhang2015}.}
+\caption{The guaranteed positively invariant set of the system~\eqref{eq:example:system:MRPI} in solid red, in dashed blue the robust positively invariant set for the disturbance set computed with the methods discussed in~\cite{Zhang2015}.}
 \label{fig:MRPI:optimised}
 \vspace{4mm}\end{figure}
 
 
-For the same setup~\eqref{eq:example:system:MRPI} we approximate the guaranteed 3-step controllable set $\C_3(\T)$, where $\T=\{x:\norm{x}_\infty\leq 2\}$.
+For the same setup~\eqref{eq:example:system:MRPI} we approximate the guaranteed 3-step controllable set $\C_3(\T)$, where $\T=X^\infty$.
 %
-Again the result illustrated in figure~\ref{fig:n:step:controllable:set} can be reproduced using different initial values although the Hessian at the maximiser has a non-trivial nullspace.
+Again the result illustrated in Figure~\ref{fig:n:step:controllable:set} can be reproduced using different initial values although the Hessian at the maximiser has a non-trivial nullspace.
 %
 
 \begin{figure}
 \includegraphics[width=.95\linewidth]{NStepSetOptimised.pdf}
-\caption{Approximation of the guaranteed 3-step controllable set for a box $\T$ (in blue). The additional sets are remaining $C_1(\T),C_2(\T)$ and $C_3(\T)$ for the comparison set obtained with~\eqref{eq:comparison:set} and the optimised~$\V^\prime$ obtained with the proposed method.}
+\caption{Approximation of the guaranteed 3-step controllable set for a guaranteed positive invariant set $X^\infty$ (in blue). The additional sets are remaining $C_1(X^\infty),C_2(X^\infty)$ and $C_3(X^\infty)$ dashed for the comparison set obtained with~\eqref{eq:comparison:set} and solid for the optimised~$\V^\prime$ obtained with the proposed method.}
 \label{fig:n:step:controllable:set}
 \vspace{4mm}\end{figure}
 
@@ -724,7 +731,7 @@ Again the result illustrated in figure~\ref{fig:n:step:controllable:set} can be 
 %
 In this paper we presented a method in which the positively invariant set and the $n$-step controllable set of a stochastically constrained system are approximated respectively.
 %
-The method we present is based on a simple restriction of the set $\V^\prime\subseteq$ to be a parallelotope, which yields remarkable results in simulation and does not introduce non-convex constraints in the optimisation presented.
+The method we present is based on a simple restriction of the set $\V^\prime\subseteq\V$ to be a parallelotope, which yields remarkable results in simulation and does not introduce non-convex constraints in the optimisation presented.
 %
 Although the presented scheme scales well to higher dimensions, the complexity of positively invariant sets and $n$-step controllable sets does not.
 %
