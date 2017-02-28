@@ -337,7 +337,7 @@ In order to compute $X^\infty$ we define the sequence $X_0,X_1,\ldots$ via the i
 %
 \begin{equation}\label{eq:MRPI:sequence}
 \begin{aligned}
-  & X_0 = \X \\
+  & X_0 = \X\cap K^{-1}\mathcal U \\
   & \begin{aligned}
       & Z_k = X_k\cap\R\\
       & X_{k+1} = Z_k\cap(A+BK)^{-1}(Z_k\ominus\W)
@@ -351,16 +351,20 @@ Clearly $X_k = \bigcap_{l=0,\ldots,k}\E_l$ and, analogously to the conventional 
 
 \vspace{0.5\baselineskip}
 \begin{thm}\label{thm2}
-Let $\Gamma$ be a matrix such that $\Gamma x\leq\bfa{1}$ and $-\Gamma x\leq\bfa{1}$ for all $x\in\X$ and let $\bigl((A+BK),\Gamma\bigr)$ be observable, then the iteration~\eqref{eq:MRPI:sequence} %terminates after a finite number, $N$, of iterations, such that 
+Let $\Gamma$ be a matrix such that $\Gamma x\leq\bfa{1}$ and $-\Gamma x\leq\bfa{1}$ for all $x\in X_0$ and let $\bigl((A+BK),\Gamma\bigr)$ be observable, then the iteration~\eqref{eq:MRPI:sequence} %terminates after a finite number, $N$, of iterations, such that 
 yields $X_{k+1}=X_k$ for all $k\geq N$ and hence $X_k=X^\infty$ for some finite integer $N$.
 \end{thm}
+%
+The matrix~$\Gamma$ is an analytical object and can be made up of~$E_i$ and~$F_iK$, but does not need to contain all inequalities supporting~$X_0$, e.g. in asymmetrical cases.
+%
+\\[1em]
 %
 \bpf
 %
 The observability of the pair $\bigl((A+BK),\Gamma\bigr)$ implies that $X_{d-1}$ is compact, since 
 \begin{align*}
 X_{d-1} 
-&\subseteq\bigcap_{k\leq d-1}(A+BK)^{-k}\X\\
+&\subseteq\bigcap_{k\leq d-1}(A+BK)^{-k} X_0\\
 &\subseteq \Bigl\{x:\pm\Gamma x\leq\bfa{1}\wedge\dots\wedge\pm\Gamma(A+BK)^{d-1} x\leq\bfa{1} \Bigr\}\\
 & = \bigl\{x:\pm\Gamma \Obs x\leq \bfa{1}\bigr\}
 \end{align*}
@@ -370,7 +374,7 @@ Let~$P$ be such that
 \[
 (A+BK)^TP(A+BK) \leq \rho^2P
 \]
-holds, where $\rho$ denotes the spectral radius of $A+BK$.
+holds, where $\rho$ denotes the spectral radius of $A+BK$, such a matrix can be found using semi-definite programming.
 %
 To see that $\E_k$ grows exponentially let $\W\subseteq\B_P(r)$ then
 %
@@ -510,7 +514,7 @@ onto the $x$-subspace.
 %
 Thus
 \[
-C_1(\T) = \{ x : \exists u \ \text{such that} \ (x,u)\in L_1(\T)\}.
+C_1(\T) = \{ x\in\mathcal X : \exists u \ \text{such that} \ (x,u)\in L_1(\T)\}.
 \]
 As all involved sets are polytopic, $L_1(\T)$ is polytopic and its exact projection can be determined computationally.
 
@@ -764,13 +768,15 @@ subject to
 Where $\V = \{v : \Gamma_i v \leq 1, \, i =1, \ldots ,4\}$ and
 %$\hat{v}^{(j)}$, $j=1,\ldots,N$ 
 $\hat{v}^{(1)},\ldots,\hat{v}^{(N)}$
-are the samples used to satisfy the probabilistic requirements with the given confidence of $\beta=0.001$. The number of samples that are needed to satisfy this requirement is given by the cumulative binomial distribution, but can be overestimated to be $N \geq \frac{2}{\beta}(2-\log(p))$, so for this example $N = 4714$.
+are the samples used to satisfy the probabilistic requirements with the given confidence of $\beta=0.001$. 
+%
+The number of samples that are needed to satisfy this requirement is given by the cumulative binomial distribution, but can be overestimated to be $N \geq \frac{2}{1-p}(2-\log(\beta))$, so for this example $N = 26$.
 %
 The resulting sets are illustrated in Figure~\ref{figure:V:prime:and:comparison} and~\ref{fig:MRPI:optimised}.
 %
 \begin{figure}
 \includegraphics[width=.95\linewidth]{Vprime.pdf}
-\caption{The set~$\V^\prime$ resulting the optimisation~\eqref{seq:optimisation:MRPI:precise} for the discussed requirements in \textcolor[rgb]{0.9255,0.6902,0.2078}{yellow} with $\PP\{v\in\V^\prime\}=0.3$, and in \textcolor{red}{red}, the set satisfying~\eqref{eq:comparison:set}, with the defining samples. The comparison set contains $99.91$\% of the total volume of $\V$.}
+\caption{The set~$\V^\prime$ resulting the optimisation~\eqref{seq:optimisation:MRPI:precise} for the discussed requirements in \textcolor[rgb]{0.9255,0.6902,0.2078}{yellow} with $\PP\{v\in\V^\prime\}=0.3$, and in \textcolor{red}{red}, the set satisfying~\eqref{eq:comparison:set}, with the defining samples. The comparison set contains $80.77$\% of the total volume of $\V$.}
 \label{figure:V:prime:and:comparison}
 \vspace{4mm}
 \end{figure}
@@ -781,7 +787,7 @@ The resulting sets are illustrated in Figure~\ref{figure:V:prime:and:comparison}
 % \caption{The guaranteed positively invariant set of the system~\eqref{eq:example:system:MRPI} in solid red, in dashed blue the robust positively invariant set for the disturbance set computed with the methods discussed in~\cite{Zhang2015}.}
 \caption{The guaranteed positively invariant set $X^\infty$ computed using~(\ref{seq:optimisation:MRPI:abstract}a-c) 
 %of the system~\eqref{eq:example:system:MRPI} 
-in red, and in blue the robust positively invariant set for the disturbance set computed using the methods discussed in~\cite{Zhang2015} with 
+in \textcolor[rgb]{0,0.5216,0.7373}{blue}, and in \textcolor[rgb]{1,0,0}{dashed red} the robust positively invariant set for the disturbance set computed using the methods discussed in~\cite{Zhang2015} with 
 %a confidence level of $0.999$.}
 confidence $1-\beta$, $\beta = 0.001$.}
 \label{fig:MRPI:optimised}
@@ -801,8 +807,10 @@ Again the result illustrated in Figure~\ref{fig:n:step:controllable:set} is repr
 
 \begin{figure}
 \includegraphics[width=.95\linewidth]{NStepSetOptimised.pdf}
-% \caption{Approximation of the guaranteed 3-step controllable set for a guaranteed positive invariant set $X^\infty$ (in blue). The additional sets are remaining $C_1(X^\infty),C_2(X^\infty)$ and $C_3(X^\infty)$ dashed for the comparison set obtained with~\eqref{eq:comparison:set} and solid for the optimised~$\V^\prime$ obtained with the proposed method.}
-\caption{Approximation of the guaranteed 3-step controllable set for a box $\T$ (in blue). Sets $C_1(\T)$, $C_2(\T)$ and $C_3(\T)$ computed by optimising $\V^\prime$ using  (\ref{seq:optimisation:n:step:set:abstract}a-c) are shown in solid lines. For comparison, the controllable sets obtained with~\eqref{eq:comparison:set} with 
+\caption{Approximation of the guaranteed 3-step controllable set for a guaranteed positive invariant set $X^\infty$ (\textcolor[rgb]{0.4667,0.6745,0.1882}{in green}). 
+% The additional sets are remaining $C_1(X^\infty),C_2(X^\infty)$ and $C_3(X^\infty)$ dashed for the comparison set obtained with~\eqref{eq:comparison:set} and solid for the optimised~$\V^\prime$ obtained with the proposed method.}
+% \caption{Approximation of the guaranteed 3-step controllable set for a box $\T$ (in blue). 
+Sets $C_1(X^\infty)$, $C_2(X^\infty)$ and $C_3(X^\infty)$ computed by optimising $\V^\prime$ using  (\ref{seq:optimisation:n:step:set:abstract}a-c) are shown in solid lines. For comparison, the controllable sets obtained with~\eqref{eq:comparison:set} with 
 confidence $1-\beta$, $\beta = 0.001$ are shown in dashed lines.}
 \label{fig:n:step:controllable:set}
 \vspace{4mm}\end{figure}
