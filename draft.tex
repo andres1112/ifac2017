@@ -353,11 +353,11 @@ Clearly $X_k = \bigcap_{l=0,\ldots,k}\E_l$ and, analogously to the conventional 
 
 \vspace{0.5\baselineskip}
 \begin{thm}\label{thm2}
-Let $\Gamma$ be a matrix such that $\Gamma x\leq\bfa{1}$ and $-\Gamma x\leq\bfa{1}$ for all $x\in X_0$ and let $\bigl((A+BK),\Gamma\bigr)$ be observable, then the iteration~\eqref{eq:MRPI:sequence} %terminates after a finite number, $N$, of iterations, such that 
+Assume that $K$ is chosen so that $\rho < 1$, where $\rho$ is the spectral radius of $A+BK$. Also let $\Gamma$ be a matrix such that $\Gamma x\leq\bfa{1}$ and $-\Gamma x\leq\bfa{1}$ for all $x\in X_0$ and let $\bigl((A+BK),\Gamma\bigr)$ be observable, then the iteration~\eqref{eq:MRPI:sequence} %terminates after a finite number, $N$, of iterations, such that 
 yields $X_{k+1}=X_k$ for all $k\geq N$ and hence $X_k=X^\infty$ for some finite integer $N$.
 \end{thm}
 %
-The matrix~$\Gamma$ is an analytical object and can be made up of~$E_i$ and~$F_iK$, but does not need to contain all inequalities supporting~$X_0$, e.g. in asymmetrical cases.
+The matrix~$\Gamma$ is introduced to simplify  analysis of the iteration~(\ref{eq:MRPI:sequence}). Note that the rows of $\Gamma$ can include~$E_i$ and~$F_iK$, but $\Gamma$ need not contain all hyperplanes supporting~$X_0$ (consider for example the case of asymmetrical constraints).
 %
 \\[1em]
 %
@@ -376,7 +376,9 @@ Let~$P$ be such that
 \[
 (A+BK)^TP(A+BK) \leq \rho^2P
 \]
-holds, where $\rho$ denotes the spectral radius of $A+BK$, such a matrix can be found using semi-definite programming.
+holds (a suitable matrix $P$ can be found using semi-definite programming).
+%, where $\rho$ denotes the spectral radius of $A+BK$, 
+%such a matrix can be found using semi-definite programming.
 %
 To see that $\E_k$ grows exponentially let $\W\subseteq\B_P(r)$ then
 %
@@ -818,7 +820,7 @@ Again the results illustrated in Figure~\ref{fig:n:step:controllable:set} can be
 The figure also shows the controllable sets that are obtained, for the same target set (i.e.~$\T=X^\infty$), with a fixed set $\V^\prime$ which was computed using the sample based approach of~\citet{Zhang2015} by solving~(\ref{eq:comparison:set}a-b). 
 %
 Clearly the high level of sub-optimality in this choice of $\V^\prime$, which is a consequence of the requirement for a high level of confidence of satisfaction of the chance constraint, translates to sub-optimality in the computed sets $C_n(X^\infty)$.
-\textcolor{red}{Did we not say that 5 sentences ago?}
+%\textcolor{red}{Did we not say that 5 sentences ago?}
 %
 % For the same system and constraints (\ref{eq:example:system:MRPI})-(\ref{eq:example:pconstriaint}) we approximate the guaranteed 3-step controllable set $\C_3(\T)$, where $\T=\{x:\norm{x}_\infty\leq 2\}$
 % %
